@@ -132,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  async function fetchYouTubePlaylist(playlistId) {
-    const apiKey = 'AIzaSyBQgffYxdlEzlYxT8YYKI3zYOxiqtqHY38';
+  async function fetchYouTubePlaylist(playlistId, apiKey) {
+    
     
     // Step 1: Fetch playlist details
     updateLoadingStatus('Connecting to YouTube API...');
@@ -302,8 +302,17 @@ document.addEventListener('DOMContentLoaded', () => {
     skeletonLoader.style.display = 'block';
 
     if (playlistId) {
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        skeletonLoader.style.display = 'none';
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = 'Analyze Playlist';
+        showError('A YouTube API Key is required to analyze custom playlists. Please configure one in API Settings.');
+        openApiSettingsModal();
+        return;
+      }
       try {
-        const playlist = await fetchYouTubePlaylist(playlistId);
+        const playlist = await fetchYouTubePlaylist(playlistId, apiKey);
         displayPlaylistPreview(playlist);
       } catch (err) {
         skeletonLoader.style.display = 'none';
@@ -365,4 +374,122 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'setup.html';
     });
   }
+
+  // --- API Key & Settings Modal Management ---
+  const navApiSettingsBtn = document.getElementById('nav-api-settings-btn');
+  const mobileApiSettingsBtn = document.getElementById('mobile-api-settings-btn');
+  const apiModalOverlay = document.getElementById('api-modal-overlay');
+  const apiModalCloseBtn = document.getElementById('api-modal-close-btn');
+  const apiModalCancelBtn = document.getElementById('api-modal-cancel-btn');
+  const apiModalSaveBtn = document.getElementById('api-modal-save-btn');
+  const apiKeyInput = document.getElementById('api-key-input');
+  const toggleApiKeyVisibility = document.getElementById('toggle-api-key-visibility');
+  const eyeIconShow = document.getElementById('eye-icon-show');
+  const eyeIconHide = document.getElementById('eye-icon-hide');
+  const apiStatusDot = document.getElementById('api-status-dot');
+  const apiStatusText = document.getElementById('api-status-text');
+
+  function getApiKey() {
+    const localKey = localStorage.getItem('youtube_api_key');
+    if (localKey && localKey.trim()) {
+      return localKey.trim();
+    }
+    if (window.PlaylistPilotConfig && window.PlaylistPilotConfig.apiKey && window.PlaylistPilotConfig.apiKey.trim()) {
+      return window.PlaylistPilotConfig.apiKey.trim();
+    }
+    return null;
+  }
+
+  function updateApiStatusIndicator() {
+    const localKey = localStorage.getItem('youtube_api_key');
+    const configKey = window.PlaylistPilotConfig?.apiKey;
+    
+    if (localKey && localKey.trim()) {
+      if (apiStatusDot) apiStatusDot.style.backgroundColor = 'var(--color-success)';
+      if (apiStatusText) apiStatusText.textContent = 'Active key configured via Local Storage.';
+      if (apiKeyInput) apiKeyInput.value = localKey;
+    } else if (configKey && configKey.trim()) {
+      if (apiStatusDot) apiStatusDot.style.backgroundColor = 'var(--color-success)';
+      if (apiStatusText) apiStatusText.textContent = 'Active key configured via config.js.';
+      if (apiKeyInput) apiKeyInput.value = configKey;
+    } else {
+      if (apiStatusDot) apiStatusDot.style.backgroundColor = 'var(--color-text-secondary)';
+      if (apiStatusText) apiStatusText.textContent = 'No API Key configured. Real playlists will not work.';
+      if (apiKeyInput) apiKeyInput.value = '';
+    }
+  }
+
+  function openApiSettingsModal() {
+    updateApiStatusIndicator();
+    if (apiModalOverlay) {
+      apiModalOverlay.classList.add('open');
+    }
+  }
+
+  function closeApiSettingsModal() {
+    if (apiModalOverlay) {
+      apiModalOverlay.classList.remove('open');
+    }
+  }
+
+  if (navApiSettingsBtn) {
+    navApiSettingsBtn.addEventListener('click', () => openApiSettingsModal());
+  }
+
+  if (mobileApiSettingsBtn) {
+    mobileApiSettingsBtn.addEventListener('click', () => {
+      openApiSettingsModal();
+      if (mobileNavPanel) {
+        mobileNavPanel.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenuBtn.style.transform = 'none';
+      }
+    });
+  }
+
+  if (apiModalCloseBtn) {
+    apiModalCloseBtn.addEventListener('click', closeApiSettingsModal);
+  }
+
+  if (apiModalCancelBtn) {
+    apiModalCancelBtn.addEventListener('click', closeApiSettingsModal);
+  }
+
+  if (apiModalOverlay) {
+    apiModalOverlay.addEventListener('click', (e) => {
+      if (e.target === apiModalOverlay) {
+        closeApiSettingsModal();
+      }
+    });
+  }
+
+  if (apiModalSaveBtn) {
+    apiModalSaveBtn.addEventListener('click', () => {
+      const keyVal = apiKeyInput ? apiKeyInput.value.trim() : '';
+      if (keyVal === '') {
+        localStorage.removeItem('youtube_api_key');
+      } else {
+        localStorage.setItem('youtube_api_key', keyVal);
+      }
+      updateApiStatusIndicator();
+      closeApiSettingsModal();
+    });
+  }
+
+  if (toggleApiKeyVisibility && apiKeyInput) {
+    toggleApiKeyVisibility.addEventListener('click', () => {
+      const isPassword = apiKeyInput.type === 'password';
+      apiKeyInput.type = isPassword ? 'text' : 'password';
+      if (isPassword) {
+        if (eyeIconShow) eyeIconShow.style.display = 'none';
+        if (eyeIconHide) eyeIconHide.style.display = 'block';
+      } else {
+        if (eyeIconShow) eyeIconShow.style.display = 'block';
+        if (eyeIconHide) eyeIconHide.style.display = 'none';
+      }
+    });
+  }
+
+  // Run status check on page load
+  updateApiStatusIndicator();
 });
