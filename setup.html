@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customize Your Learning Plan - PlaylistPilot</title>
+  <meta name="description" content="Set your learning preferences, playback speeds, and study intensity to generate your personalized learning schedule.">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"></span>
+        PlaylistPilot
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li>
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="github-link">
+            <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+            GitHub
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    
+    <!-- Empty State (Shown if no playlist is in localStorage) -->
+    <div class="empty-state" id="setup-empty-state" style="display: none;">
+      <div class="empty-state-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h2>No Playlist Selected</h2>
+      <p>Before customizing a learning plan, you need to input a playlist URL on the homepage.</p>
+      <a href="index.html" class="btn btn-primary">Go to Homepage</a>
+    </div>
+
+    <!-- Main Setup Content -->
+    <div class="setup-layout" id="setup-content">
+      <div class="setup-header">
+        <span class="badge badge-primary" style="margin-bottom: 0.5rem;" id="playlist-tag">Loading Playlist...</span>
+        <h1>Customize Your Learning Plan</h1>
+        <p>Tell us how you prefer to learn, and we'll craft the perfect day-by-day study schedule.</p>
+      </div>
+
+      <div class="setup-form-card">
+        <form id="learning-preferences-form" novalidate>
+          
+          <!-- Field 1: Hours Available Per Day -->
+          <div class="form-section">
+            <label class="form-label" for="hours-per-day">Hours Available Per Day</label>
+            <p class="form-desc">How much time can you dedicate to watching and studying daily?</p>
+            <input 
+              type="number" 
+              class="text-input" 
+              id="hours-per-day" 
+              name="hoursPerDay" 
+              min="0.5" 
+              max="8" 
+              step="0.5" 
+              value="2.0"
+              required
+            >
+            <div class="error-message" id="hours-error">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>Please enter a value between 0.5 and 8 hours.</span>
+            </div>
+          </div>
+
+          <!-- Field 2: Playback Speed Segmented Radio Buttons -->
+          <div class="form-section">
+            <label class="form-label">Playback Speed</label>
+            <p class="form-desc">We will adjust the duration calculations based on your preferred video speed.</p>
+            <div class="segmented-control">
+              <div class="segmented-option">
+                <input type="radio" id="speed-1x" name="playbackSpeed" value="1" checked>
+                <label for="speed-1x" class="segmented-label">1x</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="speed-1-25x" name="playbackSpeed" value="1.25">
+                <label for="speed-1-25x" class="segmented-label">1.25x</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="speed-1-5x" name="playbackSpeed" value="1.5">
+                <label for="speed-1-5x" class="segmented-label">1.5x</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="speed-1-75x" name="playbackSpeed" value="1.75">
+                <label for="speed-1-75x" class="segmented-label">1.75x</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="speed-2x" name="playbackSpeed" value="2">
+                <label for="speed-2x" class="segmented-label">2x</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Field 3: Learning Intensity Custom Card Selectors -->
+          <div class="form-section">
+            <label class="form-label">Learning Intensity</label>
+            <p class="form-desc">Pacing strategy. Affects how densely video durations are packed into each day.</p>
+            <div class="intensity-cards-grid">
+              
+              <!-- Casual Card -->
+              <div class="intensity-card-option">
+                <input type="radio" id="intensity-casual" name="intensity" value="casual">
+                <label for="intensity-casual" class="intensity-card-label">
+                  <span class="intensity-title">Casual</span>
+                  <span class="intensity-desc">Relaxed pacing (80% load). Focus on steady absorption.</span>
+                </label>
+              </div>
+
+              <!-- Consistent Card -->
+              <div class="intensity-card-option">
+                <input type="radio" id="intensity-consistent" name="intensity" value="consistent" checked>
+                <label for="intensity-consistent" class="intensity-card-label">
+                  <span class="intensity-title">Consistent</span>
+                  <span class="intensity-desc">Balanced pacing (100% load). Standard learning schedule.</span>
+                </label>
+              </div>
+
+              <!-- Intensive Card -->
+              <div class="intensity-card-option">
+                <input type="radio" id="intensity-intensive" name="intensity" value="intensive">
+                <label for="intensity-intensive" class="intensity-card-label">
+                  <span class="intensity-title">Intensive</span>
+                  <span class="intensity-desc">Pushed pacing (120% load). Pack maximum progress daily.</span>
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Field 4: Weekly Revision Day Toggle Switch -->
+          <div class="form-section">
+            <label class="form-label">Study Schedule Adjustments</label>
+            <div class="toggle-wrapper">
+              <div class="toggle-info">
+                <p class="toggle-title">Weekly Revision Day</p>
+                <p class="toggle-desc">Insert a weekly rest and catch-up day on the schedule with no new videos.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="revision-days" name="revisionDays" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Field 5: Completion Goal Dropdown Select -->
+          <div class="form-section">
+            <label class="form-label" for="completion-goal">Completion Goal</label>
+            <p class="form-desc">Define your primary objective for this course plan.</p>
+            <select class="dropdown-select" id="completion-goal" name="completionGoal">
+              <option value="balanced" selected>Balanced Completion Plan (Recommended)</option>
+              <option value="fastest">Fastest Possible Track (Packs study days tightly)</option>
+              <option value="comfortable">Comfortable Path (Pads days with extra buffer)</option>
+            </select>
+          </div>
+
+          <!-- Actions -->
+          <div class="setup-actions">
+            <button type="submit" class="btn btn-primary btn-lg setup-submit-btn" id="generate-plan-btn">
+              Generate Plan
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-content">
+      <p>&copy; 2026 PlaylistPilot. All rights reserved. Designed for portfolios and prototypes.</p>
+      <div class="footer-links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#about">About</a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mock Database and Page JS Scripts -->
+  <script src="js/mockData.js"></script>
+  <script src="js/setup.js"></script>
+</body>
+</html>

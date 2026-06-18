@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Learning Plan - PlaylistPilot</title>
+  <meta name="description" content="View your personalized day-by-day learning schedule and track your course progress.">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"></span>
+        PlaylistPilot
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li>
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="github-link">
+            <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+            GitHub
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    
+    <!-- Empty State (Shown if preferences or playlist are missing) -->
+    <div class="empty-state" id="plan-empty-state" style="display: none;">
+      <div class="empty-state-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h2>No Learning Plan Found</h2>
+      <p>We couldn't find a generated plan. Please go back to the homepage and analyze a playlist first.</p>
+      <a href="index.html" class="btn btn-primary">Go to Homepage</a>
+    </div>
+
+    <!-- Generated Plan Layout -->
+    <div class="plan-layout" id="plan-content">
+      
+      <!-- Top Action Navigation -->
+      <div class="plan-header-nav">
+        <a href="setup.html" class="btn btn-secondary btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back To Setup
+        </a>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-outline" id="regenerate-plan-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+            Regenerate Plan
+          </button>
+          <button class="btn btn-primary" id="download-plan-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+            </svg>
+            Download Plan
+          </button>
+        </div>
+      </div>
+
+      <!-- Top Summary Card Banner -->
+      <div class="plan-summary-card">
+        <div class="plan-meta-row">
+          <div class="plan-playlist-info">
+            <h1 id="plan-playlist-title">JavaScript Mastery & Web Development</h1>
+            <p>Created by <strong id="plan-playlist-creator">Code Academy</strong></p>
+          </div>
+          <div class="plan-summary-badge-container">
+            <span class="badge badge-success" id="speed-badge">1.5x Speed</span>
+            <span class="badge badge-gray" id="revision-badge">Revision Days: On</span>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="plan-details-grid">
+          
+          <div class="plan-details-item">
+            <span class="plan-details-label">Total Days</span>
+            <span class="plan-details-value" id="stat-total-days">16</span>
+          </div>
+          
+          <div class="plan-details-item">
+            <span class="plan-details-label">Hours Per Day</span>
+            <span class="plan-details-value" id="stat-hours-per-day">2.0 <span>hrs</span></span>
+          </div>
+
+          <div class="plan-details-item">
+            <span class="plan-details-label">Avg. Videos / Day</span>
+            <span class="plan-details-value" id="stat-videos-per-day">5.4</span>
+          </div>
+
+          <div class="plan-details-item">
+            <span class="plan-details-label">Estimated End Date</span>
+            <span class="plan-details-value" id="stat-end-date">July 4, 2026</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Dashboard Columns Grid -->
+      <div class="dashboard-grid">
+        
+        <!-- Left: Dynamic Study Timeline -->
+        <section>
+          <div class="timeline-section-title">
+            <span>Course Study Timeline</span>
+            <span class="badge badge-gray" id="plan-progress-badge">120 Videos Total</span>
+          </div>
+          <div class="timeline-container" id="timeline-container">
+            <!-- Timeline days will be generated dynamically here -->
+          </div>
+        </section>
+
+        <!-- Right: Preference recap and Tips sidebar -->
+        <aside>
+          <!-- Preferences Recap Card -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Study Preferences</h3>
+            <div class="preference-summary-list">
+              <div class="pref-summary-item">
+                <span class="pref-summary-label">Target Study Time</span>
+                <span class="pref-summary-value" id="pref-target-time">2.0 hrs/day</span>
+              </div>
+              <div class="pref-summary-item">
+                <span class="pref-summary-label">Playback Speed</span>
+                <span class="pref-summary-value" id="pref-speed">1.25x</span>
+              </div>
+              <div class="pref-summary-item">
+                <span class="pref-summary-label">Learning Intensity</span>
+                <span class="pref-summary-value" style="text-transform: capitalize;" id="pref-intensity">Consistent</span>
+              </div>
+              <div class="pref-summary-item">
+                <span class="pref-summary-label">Weekly Revision</span>
+                <span class="pref-summary-value" id="pref-revision">Enabled</span>
+              </div>
+              <div class="pref-summary-item">
+                <span class="pref-summary-label">Completion Goal</span>
+                <span class="pref-summary-value" style="text-transform: capitalize;" id="pref-goal">Balanced</span>
+              </div>
+              <div class="pref-summary-item" style="border-top: 1px solid var(--color-border); padding-top: 0.75rem; margin-top: 0.25rem;">
+                <span class="pref-summary-label">Total Video Length</span>
+                <span class="pref-summary-value" id="pref-total-raw-duration">48h 0m</span>
+              </div>
+              <div class="pref-summary-item">
+                <span class="pref-summary-label">Adjusted Watch Time</span>
+                <span class="pref-summary-value" id="pref-total-adjusted-duration">38h 24m</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Study Tips Card -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Learning Best Practices</h3>
+            <ul class="tips-list">
+              <li>Keep Figma, your code editor, or notepad open on a split screen for active taking.</li>
+              <li>Commit to studying at the exact same hour every day to anchor the behavior.</li>
+              <li>During revision days, do not watch new content. Instead, summarize your learnings or build a small project.</li>
+              <li>If you fall behind a day, do not rush. Adjust your target hours using "Regenerate Plan".</li>
+            </ul>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-content">
+      <p>&copy; 2026 PlaylistPilot. All rights reserved. Designed for portfolios and prototypes.</p>
+      <div class="footer-links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#about">About</a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mock Database and Page JS Scripts -->
+  <script src="js/mockData.js"></script>
+  <script src="js/plan.js"></script>
+</body>
+</html>
