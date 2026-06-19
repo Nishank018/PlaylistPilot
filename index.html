@@ -3,13 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PlaylistPilot - Turn YouTube Playlists Into structured Learning Plans</title>
+  <title>PlaylistPilot - Turn YouTube Playlists Into Structured Learning Plans</title>
   <meta name="description" content="Stop saving YouTube playlists. Start finishing them. Transform any course or playlist into a personalized day-by-day learning plan.">
   
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+  
+  <!-- GSAP Animation Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
+
+  <!-- Ambient background glow -->
+  <div class="bg-glow"></div>
 
   <!-- Navigation Bar -->
   <nav class="navbar" id="main-navbar">
@@ -29,15 +35,6 @@
             GitHub
           </a>
         </li>
-        <li>
-          <button id="nav-api-settings-btn" class="btn btn-outline" style="padding: 0.375rem 0.75rem; font-size: 0.8125rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            API Settings
-          </button>
-        </li>
       </ul>
       <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -55,28 +52,21 @@
       <li><a href="#features" id="mobile-link-features">Features</a></li>
       <li><a href="#about" id="mobile-link-about">About</a></li>
       <li><a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-      <li style="margin-top: 1.5rem; padding: 0 1.5rem;">
-        <button id="mobile-api-settings-btn" class="btn btn-outline" style="width: 100%; justify-content: center;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-          API Settings
-        </button>
-      </li>
     </ul>
   </div>
 
   <main>
     <!-- Hero Section -->
     <section class="container">
-      <div class="hero-container">
-        <span class="badge badge-primary hero-tagline">Now in Public Beta</span>
-        <h1 class="hero-headline">Turn YouTube Playlists<br>Into Structured Learning Plans</h1>
-        <p class="hero-subheadline">Stop saving playlists to watch later. Transform video courses into organized, daily schedules built around your life.</p>
+      <div class="hero-container" style="position: relative;">
+        <!-- Ambient hero glow -->
+        <div class="hero-glow"></div>
+        <span class="badge badge-primary hero-tagline" id="hero-tag">Curate your learning</span>
+        <h1 class="hero-headline" id="hero-title">Playlists to plans,<br>instantly.</h1>
+        <p class="hero-subheadline" id="hero-sub">Transform any YouTube course or playlist into a beautiful, personalized, daily learning curriculum designed to fit your life.</p>
         
         <!-- URL Input Form -->
-        <div class="url-input-form">
+        <div class="url-input-form" id="hero-form">
           <div class="input-group">
             <div class="input-group-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -112,7 +102,7 @@
               <div class="skeleton-line title"></div>
               <div class="skeleton-line creator"></div>
               <div class="skeleton-line stats"></div>
-              <div id="loading-status" style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--color-accent); font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+              <div id="loading-status" style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--color-accent-hover); font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
                 <span class="status-spinner" style="width: 12px; height: 12px; border: 2px solid var(--color-accent-light); border-top-color: var(--color-accent); border-radius: 50%; display: inline-block; animation: spin 1s linear infinite;"></span>
                 <span id="loading-status-text">Analyzing playlist...</span>
               </div>
@@ -141,7 +131,7 @@
               <div>
                 <div class="playlist-meta-top">
                   <span class="badge badge-gray" id="card-category">Development</span>
-                  <span class="badge badge-success">Analyzed Successfully</span>
+                  <span class="badge badge-success">Analyzed</span>
                 </div>
                 <h3 class="playlist-title" id="card-title">Playlist Title</h3>
                 <p class="playlist-creator" id="card-creator">by Creator Name</p>
@@ -149,7 +139,7 @@
               <div class="playlist-stats-row">
                 <span class="playlist-stat">Videos: <strong id="card-video-count">0</strong></span>
                 <span class="playlist-stat">Duration: <strong id="card-duration">0 Hours</strong></span>
-                <span class="playlist-stat">Estimated Time: <strong id="card-est-days">0 Days</strong></span>
+                <span class="playlist-stat">Est. Time: <strong id="card-est-days">0 Days</strong></span>
               </div>
             </div>
           </div>
@@ -215,13 +205,13 @@
     </section>
 
     <!-- About Section -->
-    <section class="container" id="about" style="padding: 5rem 0; text-align: center; max-width: 680px;">
+    <section class="container" id="about" style="padding: 6.5rem 0; text-align: center; max-width: 680px;">
       <h2 style="margin-bottom: 1rem;">About PlaylistPilot</h2>
-      <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+      <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem; color: var(--color-text-secondary);">
         PlaylistPilot was created to solve the "watch later" graveyard. We believe that YouTube contains some of the world's best educational content, but lacks the structure of formal online courses. By offering a way to map playlists to calendars, we help learners build consistent study habits.
       </p>
-      <p style="font-size: 0.875rem;">
-        Built entirely as a modern client-side prototype using <strong>Vanilla HTML5, CSS3, and JavaScript</strong>.
+      <p style="font-size: 0.875rem; color: var(--color-text-secondary);">
+        Built as a secure full-stack application using <strong>Node.js, Express, and Vanilla JS</strong>.
       </p>
     </section>
   </main>
@@ -233,87 +223,13 @@
       <div class="footer-links">
         <a href="#features">Features</a>
         <a href="#about">About</a>
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
     </div>
   </footer>
 
-  <!-- API Settings Modal -->
-  <div class="modal-overlay" id="api-modal-overlay" style="display: none;">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>YouTube API Settings</h3>
-        <button class="modal-close-btn" id="api-modal-close-btn" aria-label="Close API Settings">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p style="margin-bottom: 1.25rem; font-size: 0.875rem; line-height: 1.5; color: var(--color-text-secondary);">
-          To fetch real YouTube playlist details, you need a YouTube Data API v3 Key. Your key is stored securely in your browser's local storage and is never uploaded anywhere.
-        </p>
-        
-        <div class="form-group" style="margin-bottom: 1.25rem;">
-          <label for="api-key-input" style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; color: var(--color-text-secondary);">YouTube Data API v3 Key</label>
-          <div style="position: relative; display: flex; align-items: center;">
-            <input 
-              type="password" 
-              id="api-key-input" 
-              class="url-input" 
-              style="width: 100%; padding-right: 2.5rem; height: 42px; font-size: 0.875rem; border: 1px solid var(--color-border); border-radius: var(--radius-md);" 
-              placeholder="Paste your AIzaSy... API key"
-            >
-            <button 
-              type="button" 
-              id="toggle-api-key-visibility" 
-              style="position: absolute; right: 0.75rem; background: none; border: none; cursor: pointer; color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center;"
-              aria-label="Toggle Key Visibility"
-            >
-              <svg id="eye-icon-show" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-              <svg id="eye-icon-hide" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                <line x1="1" y1="1" x2="23" y2="23"></line>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div style="background-color: var(--color-subtle-bg); border: 1px solid var(--color-border); padding: 0.875rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
-          <h4 style="font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.375rem; display: flex; align-items: center; gap: 0.375rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent);">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            How to get a free API key:
-          </h4>
-          <ol style="font-size: 0.75rem; padding-left: 1.25rem; color: var(--color-text-secondary); line-height: 1.5;">
-            <li>Go to the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" style="color: var(--color-accent); font-weight: 500;">Google Cloud Console</a>.</li>
-            <li>Create a project, search for the <strong>YouTube Data API v3</strong>, and click <strong>Enable</strong>.</li>
-            <li>Go to the <strong>Credentials</strong> tab, click <strong>+ Create Credentials</strong>, and select <strong>API Key</strong>.</li>
-          </ol>
-        </div>
-        
-        <div id="api-status-indicator" style="font-size: 0.8125rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 0.5rem;">
-          <span id="api-status-dot" style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-text-secondary); display: inline-block;"></span>
-          <span id="api-status-text">No key configured.</span>
-        </div>
-      </div>
-      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--color-border);">
-        <button class="btn btn-outline" id="api-modal-cancel-btn">Cancel</button>
-        <button class="btn btn-primary" id="api-modal-save-btn">Save Key</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Mock Database and Page JS Scripts -->
-  <script src="js/config.js"></script>
-  <script src="js/mockData.js"></script>
-  <script src="js/landing.js"></script>
+  <script type="module" src="js/mockData.js"></script>
+  <script type="module" src="js/landing.js"></script>
 </body>
 </html>

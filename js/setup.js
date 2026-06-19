@@ -1,7 +1,7 @@
 // PlaylistPilot - Plan Setup JS
 // Manages form inputs, custom card selections, input validation, and preference persistence.
 
-document.addEventListener('DOMContentLoaded', () => {
+const init = () => {
   // --- DOM Elements ---
   const setupContent = document.getElementById('setup-content');
   const emptyState = document.getElementById('setup-empty-state');
@@ -12,11 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const hoursError = document.getElementById('hours-error');
   const generateBtn = document.getElementById('generate-plan-btn');
 
+  // --- GSAP Animations ---
+  if (typeof gsap !== 'undefined' && setupContent && setupContent.style.display !== 'none') {
+    gsap.from('#setup-header-anim', { opacity: 0, y: -20, duration: 0.6, ease: 'power3.out' });
+    gsap.from('#setup-card-anim', { opacity: 0, y: 30, duration: 0.8, delay: 0.1, ease: 'power4.out' });
+  }
+
   // Check localStorage for a selected playlist
   const selectedPlaylistId = localStorage.getItem('selectedPlaylistId');
   
   if (!selectedPlaylistId) {
-    // Hide setup content and reveal empty state
     if (setupContent) setupContent.style.display = 'none';
     if (emptyState) emptyState.style.display = 'block';
     return;
@@ -79,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Final validation check
       if (!validateHours()) {
         return;
       }
@@ -108,4 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'plan.html';
     });
   }
-});
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+

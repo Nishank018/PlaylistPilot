@@ -1,7 +1,7 @@
 // PlaylistPilot - Generated Plan JS
-// Implements the timeline generation algorithm, displays study metrics, and generates download text.
+// Implements the timeline generation algorithm, displays study metrics, and generates PDF downloads.
 
-document.addEventListener('DOMContentLoaded', () => {
+const init = () => {
   // --- DOM Elements ---
   const planContent = document.getElementById('plan-content');
   const emptyState = document.getElementById('plan-empty-state');
@@ -72,23 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Core Algorithm: Timeline Generation ---
-  
-  // Calculate daily time budget in seconds
   const baseDailySeconds = hoursPerDay * 3600;
   
-  // Intensity multiplier
   let intensityMult = 1.0;
   if (intensity === 'casual') intensityMult = 0.8;
   if (intensity === 'intensive') intensityMult = 1.2;
 
-  // Completion goal multiplier
   let goalMult = 1.0;
   if (completionGoal === 'fastest') goalMult = 1.1;
   if (completionGoal === 'comfortable') goalMult = 0.8;
 
   const dailyLimitSeconds = baseDailySeconds * intensityMult * goalMult;
 
-  // Distribute videos into days
   const schedule = [];
   let currentDay = 1;
   let currentDayVideos = [];
@@ -99,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const videos = playlist.videos;
 
   for (let i = 0; i < videos.length; i++) {
-    // 1. Revision Day Check (Insert review day every 7th day)
     if (revisionDays && currentDay % 7 === 0) {
       schedule.push({
         dayNumber: currentDay,
@@ -108,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalAdjustedSeconds: 0
       });
       currentDay++;
-      i--; // Reprocess current video on the next day
+      i--; 
       continue;
     }
 
@@ -119,32 +113,26 @@ document.addEventListener('DOMContentLoaded', () => {
     totalRawSeconds += videoSeconds;
     totalAdjustedSeconds += adjustedVideoSeconds;
 
-    // 2. Greedy Packing Algorithm
     if (currentDayVideos.length === 0) {
-      // If the day is completely empty, add the video regardless of length (prevents infinite loops on huge videos)
       currentDayVideos.push(video);
       currentDaySeconds += adjustedVideoSeconds;
     } else if (currentDaySeconds + adjustedVideoSeconds <= dailyLimitSeconds) {
-      // Add to current day if within budget
       currentDayVideos.push(video);
       currentDaySeconds += adjustedVideoSeconds;
     } else {
-      // Save current day schedule
       schedule.push({
         dayNumber: currentDay,
         isRevision: false,
         videos: currentDayVideos,
         totalAdjustedSeconds: currentDaySeconds
       });
-      // Start a new day
       currentDay++;
       currentDayVideos = [];
       currentDaySeconds = 0;
-      i--; // Reprocess this video on the next iteration
+      i--; 
     }
   }
 
-  // Push remaining videos
   if (currentDayVideos.length > 0) {
     schedule.push({
       dayNumber: currentDay,
@@ -155,23 +143,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Display calculations ---
-  
-  // Header Meta
   planPlaylistTitle.textContent = playlist.title;
   planPlaylistCreator.textContent = playlist.creator;
   speedBadge.textContent = `${playbackSpeed}x Playback`;
   revisionBadge.textContent = `Revision Days: ${revisionDays ? 'On' : 'Off'}`;
   progressBadge.textContent = `${playlist.videoCount} Videos Total`;
 
-  // Stats Grid
   const countStudyDays = schedule.filter(d => !d.isRevision).length;
   const avgVideosPerDay = (playlist.videoCount / countStudyDays).toFixed(1);
-  
-  statTotalDays.innerHTML = `${schedule.length} <span>days</span>`;
-  statHoursPerDay.innerHTML = `${hoursPerDay.toFixed(1)} <span>hrs</span>`;
-  statVideosPerDay.innerHTML = avgVideosPerDay;
 
-  // Completion Date Calculation
+  // End Date calculation
   const today = new Date();
   const endDate = new Date(today);
   endDate.setDate(today.getDate() + schedule.length - 1);
@@ -182,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   statEndDate.textContent = formattedEndDate;
 
-  // Sidebar Summary Info
+  // Sidebar recap details
   prefTargetTime.textContent = `${hoursPerDay.toFixed(1)} hrs/day`;
   prefSpeed.textContent = `${playbackSpeed}x`;
   prefIntensity.textContent = intensity;
@@ -193,6 +174,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Render Timeline DOM ---
   renderTimeline(schedule);
+
+  // --- GSAP Dashboard Animations ---
+  if (typeof gsap !== 'undefined') {
+    // 1. Slide header and sidebar in
+    gsap.from('#plan-header-nav-anim', { opacity: 0, y: -20, duration: 0.6, ease: 'power3.out' });
+    gsap.from('#plan-summary-anim', { opacity: 0, scale: 0.98, duration: 0.7, ease: 'power3.out' });
+    gsap.from('#sidebar-section-anim', { opacity: 0, x: 20, duration: 0.7, delay: 0.2, ease: 'power3.out' });
+    
+    // 2. Animate stats numbers counting up
+    const totalDaysAnim = { val: 0 };
+    gsap.to(totalDaysAnim, {
+      val: schedule.length,
+      duration: 1.2,
+      ease: 'power2.out',
+      onUpdate: () => {
+        statTotalDays.innerHTML = `${Math.ceil(totalDaysAnim.val)} <span>days</span>`;
+      }
+    });
+
+    const hoursAnim = { val: 0 };
+    gsap.to(hoursAnim, {
+      val: hoursPerDay,
+      duration: 1.0,
+      ease: 'power2.out',
+      onUpdate: () => {
+        statHoursPerDay.innerHTML = `${hoursAnim.val.toFixed(1)} <span>hrs</span>`;
+      }
+    });
+
+    const videosPerDayAnim = { val: 0 };
+    gsap.to(videosPerDayAnim, {
+      val: parseFloat(avgVideosPerDay),
+      duration: 1.2,
+      ease: 'power2.out',
+      onUpdate: () => {
+        statVideosPerDay.innerHTML = videosPerDayAnim.val.toFixed(1);
+      }
+    });
+
+    // 3. Stagger-animate timeline cards in
+    gsap.from('.timeline-day-card', {
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      stagger: 0.12,
+      delay: 0.3,
+      ease: 'power3.out'
+    });
+  }
 
   // --- Action Listeners ---
   if (regeneratePlanBtn) {
@@ -208,7 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Helper Functions ---
-  
   function formatHoursMinutes(totalSeconds) {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.round((totalSeconds % 3600) / 60);
@@ -230,7 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
     daysSchedule.forEach(day => {
       const card = document.createElement('div');
       card.className = `timeline-day-card ${day.isRevision ? 'revision-day' : ''}`;
-      // Highlight the first day as active
       if (day.dayNumber === 1) {
         card.classList.add('active');
       }
@@ -239,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.innerHTML = `
           <div class="day-header">
             <span class="day-title">Day ${day.dayNumber} — Revision & Rest</span>
-            <span class="day-watchtime" style="color: var(--color-success); border-color: var(--color-success);">0m</span>
+            <span class="day-watchtime" style="color: var(--color-success); border-color: rgba(48, 209, 88, 0.3);">0m</span>
           </div>
           <p class="revision-desc">
             No new videos scheduled for today. Review your notes, consolidate key takeaways, and work on small practice challenges. Build something with the concepts from the past week.
@@ -272,49 +300,188 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Client-side markdown file generation and download
+  // Generate and Download PDF using jsPDF
   function triggerDownload(pl, daysSchedule, estDate) {
-    let md = `# PlaylistPilot Study Plan: ${pl.title}\n`;
-    md += `Created by: ${pl.creator}\n`;
-    md += `Generated on: ${new Date().toLocaleDateString('en-US')}\n\n`;
-    
-    md += `## Course Settings & Schedule Summary\n`;
-    md += `- **Total Duration (Raw)**: ${formatHoursMinutes(totalRawSeconds)}\n`;
-    md += `- **Adjusted Study Length**: ${formatHoursMinutes(totalAdjustedSeconds)} (@ ${playbackSpeed}x speed)\n`;
-    md += `- **Study Time Target**: ${hoursPerDay} hrs/day\n`;
-    md += `- **Weekly Revision**: ${revisionDays ? 'Enabled' : 'Disabled'}\n`;
-    md += `- **Completion Schedule**: ${daysSchedule.length} days\n`;
-    md += `- **Estimated Completion Date**: ${estDate}\n\n`;
-    
-    md += `## Day-by-Day Syllabus\n\n`;
+    if (typeof window.jspdf === 'undefined') {
+      alert('PDF generation library is still loading. Please try again in a moment.');
+      return;
+    }
 
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const margin = 20;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const maxContentWidth = pageWidth - (margin * 2);
+    
+    let y = margin;
+
+    // Helper: Draw running page header and footer
+    function drawPageDecoration(pageNum) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(140, 140, 145);
+      doc.text('PlaylistPilot — Personalized Learning Plan', margin, 12);
+      doc.text(`Page ${pageNum}`, pageWidth - margin - 10, 12);
+      
+      // Thin line separator
+      doc.setDrawColor(225, 225, 230);
+      doc.setLineWidth(0.2);
+      doc.line(margin, 14, pageWidth - margin, 14);
+
+      // Running Footer
+      doc.text('Generated via PlaylistPilot. Build habits, finish playlists.', margin, pageHeight - 10);
+    }
+
+    let pageNum = 1;
+    drawPageDecoration(pageNum);
+    y = 25; // Content start coordinates
+
+    // 1. Document Title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(10, 132, 255); // Premium Apple Blue
+    const titleLines = doc.splitTextToSize(pl.title, maxContentWidth);
+    titleLines.forEach(line => {
+      doc.text(line, margin, y);
+      y += 8;
+    });
+
+    y += 1;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10.5);
+    doc.setTextColor(90, 90, 95);
+    doc.text(`Playlist course created by: ${pl.creator}`, margin, y);
+    y += 9;
+
+    // 2. Settings Summary Block (Sleek filled container)
+    doc.setFillColor(245, 245, 247);
+    doc.roundedRect(margin, y, maxContentWidth, 38, 3, 3, 'F');
+    
+    doc.setFontSize(8.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(110, 110, 115);
+    doc.text('SYLLABUS & TIME PREFERENCES', margin + 6, y + 6);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(45, 45, 50);
+    
+    // Left side info column
+    doc.text(`• Total Video Length: ${formatHoursMinutes(totalRawSeconds)}`, margin + 6, y + 14);
+    doc.text(`• Adjusted Study Duration: ${formatHoursMinutes(totalAdjustedSeconds)} (at ${playbackSpeed}x)`, margin + 6, y + 21);
+    doc.text(`• Target Commitment: ${hoursPerDay} hrs/day`, margin + 6, y + 28);
+    
+    // Right side info column
+    doc.text(`• Pacing Strategy: ${intensity.charAt(0).toUpperCase() + intensity.slice(1)}`, margin + 95, y + 14);
+    doc.text(`• Course Timeline: ${daysSchedule.length} days`, margin + 95, y + 21);
+    doc.text(`• Completion Forecast: ${estDate}`, margin + 95, y + 28);
+    
+    y += 48; // Spacing below details block
+
+    // 3. Syllabus Header
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Daily Study Curriculum', margin, y);
+    y += 8;
+
+    // 4. Day-by-Day Syllabus rendering loop
     daysSchedule.forEach(day => {
+      // Safe boundary calculation before drawing next day card (estimation height)
+      const estimatedHeight = day.isRevision ? 18 : (8 + (day.videos.length * 6.5));
+      if (y + estimatedHeight > pageHeight - margin - 5) {
+        doc.addPage();
+        pageNum++;
+        drawPageDecoration(pageNum);
+        y = 23;
+      }
+
       if (day.isRevision) {
-        md += `### Day ${day.dayNumber}: Revision & Rest\n`;
-        md += `> No new videos today. Take this time to review concepts and build practice applications.\n\n`;
+        // Draw rest day banner
+        doc.setFillColor(242, 250, 243);
+        doc.setDrawColor(48, 209, 88); // Revision Green
+        doc.setLineWidth(0.3);
+        doc.roundedRect(margin, y, maxContentWidth, 14, 1.5, 1.5, 'FD');
+        
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(30, 110, 50);
+        doc.text(`Day ${day.dayNumber}: Revision & Rest`, margin + 5, y + 6);
+        
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(85, 95, 85);
+        doc.text('No new videos today. Consolidated notes, work on practice tasks, or review code topics.', margin + 5, y + 10.5);
+        
+        y += 18;
       } else {
-        md += `### Day ${day.dayNumber} (Watch Time: ${formatWatchTime(day.totalAdjustedSeconds)})\n`;
+        // Draw standard study day details
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10.5);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Day ${day.dayNumber} — Estimated Watch Time: ${formatWatchTime(day.totalAdjustedSeconds)}`, margin, y);
+        y += 6;
+
+        // Draw videos for the day
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(55, 55, 60);
+
         day.videos.forEach(vid => {
           const adjSec = vid.durationSeconds * (1 / playbackSpeed);
-          md += `- [ ] ${vid.title} (${formatWatchTime(adjSec)})\n`;
+          const durationStr = `(${formatWatchTime(adjSec)})`;
+
+          // Small Checkbox shape [ ]
+          doc.setDrawColor(180, 180, 185);
+          doc.setLineWidth(0.25);
+          doc.rect(margin + 1, y - 2.8, 3, 3);
+          
+          // Constrain text within boundaries
+          const maxTextWidth = maxContentWidth - 32; 
+          const titleLines = doc.splitTextToSize(vid.title, maxTextWidth);
+          
+          titleLines.forEach((line, index) => {
+            doc.text(line, margin + 7, y);
+            
+            // Align duration details to the right on the final line
+            if (index === titleLines.length - 1) {
+              doc.setTextColor(130, 130, 135);
+              doc.text(durationStr, pageWidth - margin - doc.getTextWidth(durationStr), y);
+              doc.setTextColor(55, 55, 60);
+            }
+            y += 5.8;
+
+            // Inside list page check
+            if (y > pageHeight - margin - 5) {
+              doc.addPage();
+              pageNum++;
+              drawPageDecoration(pageNum);
+              y = 23;
+              doc.setFont('helvetica', 'normal');
+              doc.setFontSize(9);
+            }
+          });
         });
-        md += `\n`;
+        
+        y += 3.5;
       }
     });
 
-    // Create file blob and click hidden anchor to download
-    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    
-    // Format name to slug
-    const filename = pl.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-learning-plan.md';
-    
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Save final document
+    const cleanFilename = pl.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-study-plan.pdf';
+    doc.save(cleanFilename);
   }
-});
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
