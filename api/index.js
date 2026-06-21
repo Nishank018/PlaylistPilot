@@ -55,7 +55,7 @@ app.get('/api/playlist', async (req, res) => {
     return res.status(400).json({ error: 'Invalid YouTube playlist URL or ID format.' });
   }
 
-  const apiKey = process.env.YOUTUBE_API_KEY;
+  const apiKey = process.env.YOUTUBE_API_KEY?.trim();
   if (!apiKey) {
     console.error('Missing YOUTUBE_API_KEY in environment variables.');
     return res.status(500).json({ 
@@ -108,8 +108,8 @@ app.get('/api/playlist', async (req, res) => {
       const itemsData = await itemsRes.json();
       if (itemsData.items) {
         allVideos = allVideos.concat(itemsData.items.map(item => ({
-          id: item.contentDetails.videoId,
-          title: item.snippet.title
+          id: item.contentDetails?.videoId || '',
+          title: item.snippet?.title || 'Private/Deleted Video'
         })));
       }
       nextPageToken = itemsData.nextPageToken;
@@ -143,7 +143,9 @@ app.get('/api/playlist', async (req, res) => {
       
       if (videosData.items) {
         videosData.items.forEach(item => {
-          durationMap[item.id] = parseISO8601Duration(item.contentDetails.duration);
+          if (item.contentDetails?.duration) {
+            durationMap[item.id] = parseISO8601Duration(item.contentDetails.duration);
+          }
         });
       }
 
