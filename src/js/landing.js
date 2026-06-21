@@ -281,6 +281,32 @@ const init = () => {
       window.location.href = 'setup.html';
     });
   }
+
+  // --- Visitor Counter Logic ---
+  const initVisitorCounter = async () => {
+    const counterEl = document.getElementById('visitor-counter');
+    const countValEl = document.getElementById('visitor-count');
+    if (!counterEl || !countValEl) return;
+
+    try {
+      // Fetch and increment page views using a unique namespace
+      const response = await fetch('https://api.counterapi.dev/v1/playlistpilot_nishank/visits/up');
+      if (!response.ok) throw new Error('CounterAPI request failed');
+      
+      const data = await response.json();
+      if (data && typeof data.count === 'number') {
+        // Format number with commas (e.g. 1,234)
+        countValEl.textContent = data.count.toLocaleString();
+        // Show counter badge smoothly
+        counterEl.classList.remove('hidden');
+      }
+    } catch (err) {
+      console.warn('Visitor counter could not load:', err.message);
+      // Fails silently; the visitor counter remains hidden.
+    }
+  };
+
+  initVisitorCounter();
 };
 
 if (document.readyState === 'loading') {
