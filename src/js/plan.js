@@ -84,16 +84,20 @@ const init = () => {
 
   const dailyLimitSeconds = baseDailySeconds * intensityMult * goalMult;
 
+  // Calculate totals from original playlist to avoid segment double-counting
+  const totalRawSeconds = playlist.videos.reduce((sum, v) => sum + v.durationSeconds, 0);
+  const totalAdjustedSeconds = playlist.videos.reduce((sum, v) => sum + (v.durationSeconds * (1 / playbackSpeed)), 0);
+
   const schedule = [];
   let currentDay = 1;
   let currentDayVideos = [];
-  let currentDaySeconds = 0;
-  let totalRawSeconds = 0;
-  let totalAdjustedSeconds = 0;
+  let currentDaySeconds = 0; // adjusted
 
   const videos = playlist.videos;
+  let videoIndex = 0;
+  let currentVideoProgress = 0; // raw seconds of current video processed
 
-  for (let i = 0; i < videos.length; i++) {
+  while (videoIndex < videos.length) {
     if (revisionDays && currentDay % 7 === 0) {
       schedule.push({
         dayNumber: currentDay,
@@ -102,37 +106,99 @@ const init = () => {
         totalAdjustedSeconds: 0
       });
       currentDay++;
-      i--; 
       continue;
     }
 
-    const video = videos[i];
-    const videoSeconds = video.durationSeconds;
-    const adjustedVideoSeconds = videoSeconds * (1 / playbackSpeed);
+    const video = videos[videoIndex];
+    const V_dur = video.durationSeconds;
 
-    totalRawSeconds += videoSeconds;
-    totalAdjustedSeconds += adjustedVideoSeconds;
+    // Capacity on the current day (adjusted seconds)
+    const remainingDaySeconds = dailyLimitSeconds - currentDaySeconds;
 
-    if (currentDayVideos.length === 0) {
-      currentDayVideos.push(video);
-      currentDaySeconds += adjustedVideoSeconds;
-    } else if (currentDaySeconds + adjustedVideoSeconds <= dailyLimitSeconds) {
-      currentDayVideos.push(video);
-      currentDaySeconds += adjustedVideoSeconds;
+    // How many raw seconds of capacity do we have?
+    const rawSecondsCapacity = remainingDaySeconds * playbackSpeed;
+
+    // Let's decide if we need to split
+    const rawSecondsRemainingInVideo = V_dur - currentVideoProgress;
+
+    // Determine overlap if this is a continuation segment
+    let overlapSeconds = 0;
+    if (currentVideoProgress > 0) {
+      // Safe overlap (up to 3 minutes, but at most 20% of the day's remaining capacity)
+      overlapSeconds = Math.min(180, Math.floor(rawSecondsCapacity * 0.2));
+      overlapSeconds = Math.min(overlapSeconds, currentVideoProgress);
+    }
+
+    // Adjusted seconds needed to watch the remainder of the video including overlap
+    const rawToWatch = rawSecondsRemainingInVideo + overlapSeconds;
+    const adjustedToWatch = rawToWatch / playbackSpeed;
+
+    if (adjustedToWatch <= remainingDaySeconds) {
+      // Fits completely!
+      let title = video.title;
+      let startSecond = 0;
+      let endSecond = V_dur;
+      let isSegment = false;
+
+      if (currentVideoProgress > 0) {
+        startSecond = currentVideoProgress - overlapSeconds;
+        endSecond = V_dur;
+        isSegment = true;
+      }
+
+      currentDayVideos.push({
+        title: title,
+        durationSeconds: rawToWatch, // raw seconds including overlap
+        isSegment: isSegment,
+        startSecond: startSecond,
+        endSecond: endSecond,
+        originalTitle: video.title,
+        originalDuration: V_dur
+      });
+
+      currentDaySeconds += adjustedToWatch;
+      
+      // Move to next video
+      videoIndex++;
+      currentVideoProgress = 0;
     } else {
+      // Does not fit! We must split.
+      const startSecond = Math.max(0, currentVideoProgress - overlapSeconds);
+      const endSecond = Math.min(V_dur, startSecond + rawSecondsCapacity);
+      const actualRawWatched = endSecond - startSecond;
+      const actualAdjustedWatched = actualRawWatched / playbackSpeed;
+
+      currentDayVideos.push({
+        title: video.title,
+        durationSeconds: actualRawWatched,
+        isSegment: true,
+        startSecond: startSecond,
+        endSecond: endSecond,
+        originalTitle: video.title,
+        originalDuration: V_dur
+      });
+
+      currentDaySeconds += actualAdjustedWatched;
+
+      // Close the current day
       schedule.push({
         dayNumber: currentDay,
         isRevision: false,
         videos: currentDayVideos,
         totalAdjustedSeconds: currentDaySeconds
       });
+
+      // Move to next day
       currentDay++;
       currentDayVideos = [];
       currentDaySeconds = 0;
-      i--; 
+
+      // Update progress in the current video (where we left off)
+      currentVideoProgress = endSecond;
     }
   }
 
+  // Push any remaining videos for the last day
   if (currentDayVideos.length > 0) {
     schedule.push({
       dayNumber: currentDay,
@@ -141,6 +207,40 @@ const init = () => {
       totalAdjustedSeconds: currentDaySeconds
     });
   }
+
+  // Post-processing to assign part numbers and format titles for split videos
+  const videoSegmentCounts = {};
+  schedule.forEach(day => {
+    if (!day.isRevision) {
+      day.videos.forEach(vid => {
+        if (vid.isSegment) {
+          videoSegmentCounts[vid.originalTitle] = (videoSegmentCounts[vid.originalTitle] || 0) + 1;
+        }
+      });
+    }
+  });
+
+  const currentSegmentIndices = {};
+  schedule.forEach(day => {
+    if (!day.isRevision) {
+      day.videos.forEach(vid => {
+        if (vid.isSegment) {
+          const origTitle = vid.originalTitle;
+          const totalParts = videoSegmentCounts[origTitle];
+          
+          if (totalParts === 1) {
+            vid.isSegment = false;
+          } else {
+            currentSegmentIndices[origTitle] = (currentSegmentIndices[origTitle] || 0) + 1;
+            const partIndex = currentSegmentIndices[origTitle];
+            const startFormatted = formatTimestamp(vid.startSecond);
+            const endFormatted = formatTimestamp(vid.endSecond);
+            vid.title = `[Part ${partIndex}/${totalParts}] ${vid.originalTitle} [${startFormatted} - ${endFormatted}]`;
+          }
+        }
+      });
+    }
+  });
 
   // --- Display calculations ---
   planPlaylistTitle.textContent = playlist.title;
@@ -251,6 +351,17 @@ const init = () => {
       return `${h}h ${m}m`;
     }
     return `${m}m`;
+  }
+
+  function formatTimestamp(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.round(seconds % 60);
+    const pad = (num) => String(num).padStart(2, '0');
+    if (h > 0) {
+      return `${h}:${pad(m)}:${pad(s)}`;
+    }
+    return `${m}:${pad(s)}`;
   }
 
   function renderTimeline(daysSchedule) {
