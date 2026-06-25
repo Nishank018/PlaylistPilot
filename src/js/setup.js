@@ -1,33 +1,41 @@
-// PlaylistPilot – Setup Page JavaScript
+// Setup Page JavaScript – Fixed IDs and variable scope
+// --------------------------------------------------------------
+// This script powers the setup (customisation) page. It now references the
+// actual DOM IDs used in the HTML (camelCase) and shares module‑level variables
+// where needed.
 
+// ---------- Module‑level variables (shared) ----------
+let activePlaylistId = null;
+let form, hoursInput, hoursError, generateBtn;
+let emptyState, contentSection, playlistBadge;
 
-
+/** Initialise the setup page once the DOM is ready. */
 function initSetupPage() {
   // ---------- DOM ELEMENTS ----------
-  const form = document.getElementById('learning-preferences-form');
-  const hoursInput = document.getElementById('hours-per-day');
-  const hoursError = document.getElementById('hours-error');
-  const generateBtn = document.getElementById('generate-plan-btn');
-  const emptyState = document.getElementById('setup-empty-state');
-  const contentSection = document.getElementById('setup-content');
-  const playlistBadge = document.getElementById('playlist-tag');
+  form = document.getElementById('learningPreferencesForm');
+  hoursInput = document.getElementById('hoursPerDay');
+  hoursError = document.getElementById('hoursError');
+  generateBtn = document.getElementById('generatePlanBtn');
+
+  emptyState = document.getElementById('setupEmptyState');
+  contentSection = document.getElementById('setupContent');
+  playlistBadge = document.getElementById('playlistTag');
 
   // ---------- ANIMATIONS (GSAP) ----------
   if (typeof gsap !== 'undefined' && contentSection && contentSection.style.display !== 'none') {
-    gsap.from('#setup-header-anim', { opacity: 0, y: -20, duration: 0.6, ease: 'power3.out' });
-    gsap.from('#setup-card-anim', { opacity: 0, y: 30, duration: 0.8, delay: 0.1, ease: 'power4.out' });
+    gsap.from('#setupHeaderAnim', { opacity: 0, y: -20, duration: 0.6, ease: 'power3.out' });
+    gsap.from('#setupCardAnim', { opacity: 0, y: 30, duration: 0.8, delay: 0.1, ease: 'power4.out' });
   }
 
   // ---------- PLAYLIST LOOKUP ----------
   const selectedId = localStorage.getItem('selectedPlaylistId');
   if (!selectedId) {
-    // No playlist selected – show a friendly empty state.
+    // No playlist selected – show friendly empty state.
     if (contentSection) contentSection.style.display = 'none';
     if (emptyState) emptyState.style.display = 'block';
-    return; // Nothing else to do.
+    return;
   }
 
-  // Try to retrieve the full playlist object.
   const playlist = loadPlaylistDetails(selectedId);
   if (playlistBadge) {
     playlistBadge.textContent = `Course: ${playlist.title}`;
@@ -41,37 +49,23 @@ function initSetupPage() {
 
   // ---------- FORM SUBMISSION ----------
   if (form) {
-    form.addEventListener('submit', (e) => handleFormSubmit(e, {
-      hoursInput,
-      hoursError,
-      generateBtn,
-      form
-    }));
+    form.addEventListener('submit', (e) => handleFormSubmit(e));
   }
 }
 
-/**
- * Load playlist details either from the cached "activePlaylistDetails"
- * or from the bundled mock data.
- */
+/** Load playlist details from cache or mock data. */
 function loadPlaylistDetails(id) {
   const cached = localStorage.getItem('activePlaylistDetails');
   if (cached) {
     try {
       const parsed = JSON.parse(cached);
       if (parsed && parsed.id === id) return parsed;
-    } catch (_) {
-      // Silently ignore malformed JSON – fall back to mock data.
-    }
+    } catch (_) {}
   }
-  // Fallback: look into the static mock data shipped with the app.
   return window.PlaylistPilotData.playlists.find(p => p.id === id) || {};
 }
 
-/**
- * Validate the "hours per day" field.
- * Returns true if the value is within the acceptable range.
- */
+/** Validate the "hours per day" field. */
 function validateHours(input, errorBox, submitBtn) {
   const val = parseFloat(input.value);
   const isValid = !isNaN(val) && val >= 0.5 && val <= 8;
@@ -89,36 +83,30 @@ function validateHours(input, errorBox, submitBtn) {
   return isValid;
 }
 
-/**
- * Gather all form values, persist them, and navigate to the plan page.
- */
-function handleFormSubmit(event, { hoursInput, hoursError, generateBtn, form }) {
+/** Handle form submission: persist preferences and navigate to the plan page. */
+function handleFormSubmit(event) {
   event.preventDefault();
 
-  // Abort if the hours field is still invalid.
   if (!validateHours(hoursInput, hoursError, generateBtn)) return;
 
-  // ----- Extract user selections -----
   const hoursPerDay = parseFloat(hoursInput.value);
   const speedRadio = form.querySelector('input[name="playbackSpeed"]:checked');
   const playbackSpeed = speedRadio ? parseFloat(speedRadio.value) : 1.0;
   const intensityRadio = form.querySelector('input[name="intensity"]:checked');
   const intensity = intensityRadio ? intensityRadio.value : 'consistent';
-  const revisionDays = document.getElementById('revision-days').checked;
-  const completionGoal = document.getElementById('completion-goal').value;
+  const revisionDays = document.getElementById('revisionDays').checked;
+  const completionGoal = document.getElementById('completionGoal').value;
 
-  // ----- Persist selections for the plan page -----
   localStorage.setItem('hoursPerDay', hoursPerDay.toString());
   localStorage.setItem('playbackSpeed', playbackSpeed.toString());
   localStorage.setItem('intensity', intensity);
   localStorage.setItem('revisionDays', revisionDays.toString());
   localStorage.setItem('completionGoal', completionGoal);
 
-  // ----- Navigate to the generated plan -----
   window.location.href = 'plan.html';
 }
 
-// Kick off the initialisation once the DOM is ready.
+// Initialise when DOM is ready.
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initSetupPage);
 } else {

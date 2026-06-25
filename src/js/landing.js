@@ -1,29 +1,41 @@
+// Landing Page JavaScript – Fixed variable scope and button functionality
+// --------------------------------------------------------------
+// This script powers the landing page, handling URL analysis, preview display,
+// navigation to the setup page, and UI interactions. Variables that need to be
+// accessed across multiple functions are declared in the module scope to avoid
+// ReferenceErrors.
 
+// ---------- Module‑level variables (shared across functions) ----------
+let activePlaylistId = null;
+let mobileMenuBtn, mobileNavPanel, analyzeBtn, playlistUrlInput;
+let urlErrorBox, urlErrorText;
+let skeletonLoader, playlistPreview, createPlanBtn;
+let cardTitle, cardCreator, cardVideoCount, cardVideoCountBadge;
+let cardDuration, cardEstDays, cardCategory, playlistThumb;
 
+/** Initialise the page once the DOM is ready. */
 function initLandingPage() {
   // ---------- DOM ELEMENTS ----------
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const mobileNavPanel = document.getElementById('mobile-nav-panel');
-  const analyzeBtn = document.getElementById('analyze-btn');
-  const playlistUrlInput = document.getElementById('playlist-url');
-  const urlErrorBox = document.getElementById('url-error');
-  const urlErrorText = document.getElementById('error-text');
+  mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  mobileNavPanel = document.getElementById('mobile-nav-panel');
+  analyzeBtn = document.getElementById('analyze-btn');
+  playlistUrlInput = document.getElementById('playlist-url');
+  urlErrorBox = document.getElementById('url-error');
+  urlErrorText = document.getElementById('error-text');
 
-  const skeletonLoader = document.getElementById('skeleton-loader');
-  const playlistPreview = document.getElementById('playlist-preview');
-  const createPlanBtn = document.getElementById('create-plan-btn');
+  skeletonLoader = document.getElementById('skeleton-loader');
+  playlistPreview = document.getElementById('playlist-preview');
+  createPlanBtn = document.getElementById('create-plan-btn');
 
   // ---------- PREVIEW CARD ELEMENTS ----------
-  const cardTitle = document.getElementById('card-title');
-  const cardCreator = document.getElementById('card-creator');
-  const cardVideoCount = document.getElementById('card-video-count');
-  const cardVideoCountBadge = document.getElementById('card-video-count-badge');
-  const cardDuration = document.getElementById('card-duration');
-  const cardEstDays = document.getElementById('card-est-days');
-  const cardCategory = document.getElementById('card-category');
-  const playlistThumb = document.getElementById('playlist-thumb');
-
-  let activePlaylistId = null; // remember the currently analysed playlist
+  cardTitle = document.getElementById('card-title');
+  cardCreator = document.getElementById('card-creator');
+  cardVideoCount = document.getElementById('card-video-count');
+  cardVideoCountBadge = document.getElementById('card-video-count-badge');
+  cardDuration = document.getElementById('card-duration');
+  cardEstDays = document.getElementById('card-est-days');
+  cardCategory = document.getElementById('card-category');
+  playlistThumb = document.getElementById('playlist-thumb');
 
   // ---------- ANIMATIONS (GSAP) ----------
   if (typeof gsap !== 'undefined') {
@@ -120,15 +132,13 @@ function initLandingPage() {
   initVisitorCounter();
 }
 
-/**
- * Helper to update the loading status text.
- */
+/** Helper to update the loading status text. */
 function updateLoadingStatus(msg) {
   const statusText = document.getElementById('loading-status-text');
   if (statusText) statusText.textContent = msg;
 }
 
-
+/** Show the preview card with playlist details. */
 function displayPlaylistPreview(playlist) {
   activePlaylistId = playlist.id;
   cardTitle.textContent = playlist.title;
@@ -139,7 +149,7 @@ function displayPlaylistPreview(playlist) {
   cardEstDays.textContent = `${playlist.estimatedDays} Days`;
   cardCategory.textContent = playlist.category || '';
 
-  // Thumbnail – either an image or a fallback gradient with initials
+  // Thumbnail – image or fallback gradient
   if (playlist.thumbnailUrl) {
     playlistThumb.style.background = `url('${playlist.thumbnailUrl}') center/cover no-repeat`;
     playlistThumb.textContent = '';
@@ -151,26 +161,23 @@ function displayPlaylistPreview(playlist) {
   // Cache for later pages
   localStorage.setItem('activePlaylistDetails', JSON.stringify(playlist));
 
-  // Show the preview card (hide skeleton first)
+  // Show the preview (hide skeleton first)
   skeletonLoader.style.display = 'none';
   playlistPreview.style.display = 'block';
 
-  // Animate entry with GSAP
   if (typeof gsap !== 'undefined') {
     gsap.fromTo('#playlist-preview', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
   }
-  // Smooth scroll to the card
   playlistPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-  // Reset button state
-  analyzeBtn.disabled = false;
-  analyzeBtn.textContent = 'Analyze Playlist';
+  // Reset analyze button state
+  if (analyzeBtn) {
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = 'Analyze Playlist';
+  }
 }
 
-/**
- * Core logic for analysing a YouTube playlist URL.
- * It first tries the backend API, falling back to mock data if needed.
- */
+/** Core logic for analysing a YouTube playlist URL. */
 async function handlePlaylistAnalysis() {
   const url = playlistUrlInput.value.trim();
   hideError();
@@ -183,12 +190,11 @@ async function handlePlaylistAnalysis() {
     return;
   }
 
-  // Disable UI while we work
+  // Disable UI while processing
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = 'Analyzing...';
   skeletonLoader.style.display = 'block';
 
-  // Animate skeleton entry
   if (typeof gsap !== 'undefined') {
     gsap.fromTo('#skeleton-loader', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
   }
@@ -200,7 +206,7 @@ async function handlePlaylistAnalysis() {
     const playlist = await response.json();
     displayPlaylistPreview(playlist);
   } catch (err) {
-    // Fallback to mock data based on keywords in the URL
+    // Fallback to mock data based on keywords
     const clean = url.toLowerCase();
     let mock = null;
     if (clean.includes('design') || clean.includes('ui') || clean.includes('ux') || clean === 'mock-uiux') {
@@ -223,10 +229,9 @@ async function handlePlaylistAnalysis() {
   }
 }
 
-/**
- * Show an error message for invalid URLs.
- */
+/** Show an error message for invalid URLs. */
 function showError(msg) {
+  if (!urlErrorBox) return;
   urlErrorBox.style.display = 'flex';
   urlErrorText.textContent = msg;
   playlistUrlInput.style.borderColor = 'var(--color-error)';
@@ -235,17 +240,14 @@ function showError(msg) {
   }
 }
 
-/**
- * Hide the URL error UI.
- */
+/** Hide the URL error UI. */
 function hideError() {
+  if (!urlErrorBox) return;
   urlErrorBox.style.display = 'none';
   playlistUrlInput.style.borderColor = '';
 }
 
-/**
- * Initialise the visitor counter (optional third‑party service).
- */
+/** Initialise the optional visitor counter. */
 async function initVisitorCounter() {
   const counterEl = document.getElementById('visitor-counter');
   const countValEl = document.getElementById('visitor-count');
@@ -259,7 +261,7 @@ async function initVisitorCounter() {
       counterEl.classList.remove('hidden');
     }
   } catch (_) {
-    // Silently ignore counter failures.
+    // Silently ignore failures.
   }
 }
 

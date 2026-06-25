@@ -10,80 +10,97 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
-  <div class="bgGlow"></div>
+  <div class="bg-glow"></div>
   <header class="header">
-    <nav class="headerNav">
+    <nav class="header__nav" id="main-navbar">
       <div class="container">
-        <a href="index.html" class="headerLogo"><span class="headerLogoIcon"></span>PlaylistPilot</a>
-        <ul class="headerNavLinks">
-          <li><a href="index.html#features">Features</a></li>
-          <li><a href="index.html#about">About</a></li>
-          <li><a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer" class="headerGithubLink">
-            <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align:text-bottom;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-            GitHub</a></li>
+        <a href="index.html" class="header__logo" id="nav-logo">
+          <span class="header__logo-icon"></span>
+          PlaylistPilot
+        </a>
+        <ul class="header__nav-links" id="desktop-nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#about">About</a></li>
+          <li>
+            <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer" class="header__github-link">
+              <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+              GitHub
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
   </header>
   <main class="container">
     <section class="emptyState" id="setupEmptyState" style="display:none;">
-      <div class="emptyStateIcon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="emptyStateIcon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
       <h2>No Playlist Selected</h2>
       <p>Pick a playlist on the homepage before customizing.</p>
-      <a href="index.html" class="btn btnPrimary">Go to Homepage</a>
+      <a href="index.html" class="btn btn-primary btn-lg">Go to Homepage</a>
     </section>
-    <section class="setupLayout" id="setupContent">
-      <div class="setupHeader" id="setupHeaderAnim">
-        <span class="badge badgePrimary" style="margin-bottom:0.5rem;" id="playlistTag">Loading Playlist…</span>
+    <section class="setup-layout" id="setupContent">
+      <div class="setup-header" id="setupHeaderAnim">
+        <span class="badge badge-primary" style="margin-bottom:0.5rem;" id="playlistTag">Loading Playlist…</span>
         <h1>Customize Your Learning Plan</h1>
         <p>Tell us your preferences and we'll craft a daily schedule.</p>
       </div>
-      <div class="setupFormCard" id="setupCardAnim">
+      <div class="setup-form-card" id="setupCardAnim">
         <form id="learningPreferencesForm" novalidate>
-          <div class="formSection">
-            <label class="formLabel" for="hoursPerDay">Hours Per Day</label>
-            <p class="formDesc">How much time can you study each day?</p>
-            <input type="number" class="textInput" id="hoursPerDay" name="hoursPerDay" min="0.5" max="8" step="0.5" value="2.0" required />
-            <div class="errorMessage" id="hoursError"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> <span>Please enter 0.5‑8 hrs.</span></div>
+          <div class="form-section">
+            <label class="form-label" for="hoursPerDay">Hours Per Day</label>
+            <p class="form-desc">How much time can you study each day?</p>
+            <input type="number" class="text-input" id="hoursPerDay" name="hoursPerDay" min="0.5" max="8" step="0.5" value="2.0" required />
+            <div class="error-message" id="hoursError"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> <span>Please enter 0.5‑8 hrs.</span></div>
           </div>
-          <div class="formSection">
-            <label class="formLabel">Playback Speed</label>
-            <p class="formDesc">Adjust duration calculations.</p>
-            <div class="segmentedControl">
-              <div class="segmentedOption"><input type="radio" id="speed1x" name="playbackSpeed" value="1" checked /><label for="speed1x" class="segmentedLabel">1x</label></div>
-              <div class="segmentedOption"><input type="radio" id="speed125x" name="playbackSpeed" value="1.25" /><label for="speed125x" class="segmentedLabel">1.25x</label></div>
-              <div class="segmentedOption"><input type="radio" id="speed15x" name="playbackSpeed" value="1.5" /><label for="speed15x" class="segmentedLabel">1.5x</label></div>
-              <div class="segmentedOption"><input type="radio" id="speed175x" name="playbackSpeed" value="1.75" /><label for="speed175x" class="segmentedLabel">1.75x</label></div>
-              <div class="segmentedOption"><input type="radio" id="speed2x" name="playbackSpeed" value="2" /><label for="speed2x" class="segmentedLabel">2x</label></div>
+          <div class="form-section">
+            <label class="form-label">Playback Speed</label>
+            <p class="form-desc">Adjust duration calculations.</p>
+            <div class="segmented-control">
+              <div class="segmented-option"><input type="radio" id="speed1x" name="playbackSpeed" value="1" checked /><label for="speed1x" class="segmented-label">1x</label></div>
+              <div class="segmented-option"><input type="radio" id="speed125x" name="playbackSpeed" value="1.25" /><label for="speed125x" class="segmented-label">1.25x</label></div>
+              <div class="segmented-option"><input type="radio" id="speed15x" name="playbackSpeed" value="1.5" /><label for="speed15x" class="segmented-label">1.5x</label></div>
+              <div class="segmented-option"><input type="radio" id="speed175x" name="playbackSpeed" value="1.75" /><label for="speed175x" class="segmented-label">1.75x</label></div>
+              <div class="segmented-option"><input type="radio" id="speed2x" name="playbackSpeed" value="2" /><label for="speed2x" class="segmented-label">2x</label></div>
             </div>
           </div>
-          <div class="formSection">
-            <label class="formLabel">Learning Intensity</label>
-            <p class="formDesc">How tightly should we pack videos each day?</p>
-            <div class="intensityCardsGrid">
-              <div class="intensityCardOption"><input type="radio" id="intensityCasual" name="intensity" value="casual" /><label for="intensityCasual" class="intensityCardLabel"><span class="intensityTitle">Casual</span><span class="intensityDesc">Relaxed (80% load).</span></label></div>
-              <div class="intensityCardOption"><input type="radio" id="intensityConsistent" name="intensity" value="consistent" checked /><label for="intensityConsistent" class="intensityCardLabel"><span class="intensityTitle">Consistent</span><span class="intensityDesc">Balanced (100% load).</span></label></div>
-              <div class="intensityCardOption"><input type="radio" id="intensityIntensive" name="intensity" value="intensive" /><label for="intensityIntensive" class="intensityCardLabel"><span class="intensityTitle">Intensive</span><span class="intensityDesc">Pushed (120% load).</span></label></div>
+          <div class="form-section">
+            <label class="form-label">Learning Intensity</label>
+            <p class="form-desc">How tightly should we pack videos each day?</p>
+            <div class="intensity-cards-grid">
+              <div class="intensity-card-option"><input type="radio" id="intensityCasual" name="intensity" value="casual" /><label for="intensityCasual" class="intensity-card-label"><span class="intensity-title">Casual</span><span class="intensity-desc">Relaxed (80% load).</span></label></div>
+              <div class="intensity-card-option"><input type="radio" id="intensityConsistent" name="intensity" value="consistent" checked /><label for="intensityConsistent" class="intensity-card-label"><span class="intensity-title">Consistent</span><span class="intensity-desc">Balanced (100% load).</span></label></div>
+              <div class="intensity-card-option"><input type="radio" id="intensityIntensive" name="intensity" value="intensive" /><label for="intensityIntensive" class="intensity-card-label"><span class="intensity-title">Intensive</span><span class="intensity-desc">Pushed (120% load).</span></label></div>
             </div>
           </div>
-          <div class="formSection">
-            <label class="formLabel">Weekly Revision Day</label>
-            <div class="toggleWrapper">
-              <div class="toggleInfo"><p class="toggleTitle">Revision Day</p><p class="toggleDesc">Rest day with no new videos.</p></div>
-              <label class="toggleSwitch"><input type="checkbox" id="revisionDays" name="revisionDays" checked /><span class="toggleSlider"></span></label>
+          <div class="form-section">
+            <label class="form-label">Weekly Revision Day</label>
+            <div class="toggle-wrapper">
+              <div class="toggle-info">
+                <p class="toggle-title">Revision Day</p>
+                <p class="toggle-desc">Rest day with no new videos.</p>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="revisionDays" name="revisionDays" checked /><span class="toggle-slider"></span></label>
             </div>
           </div>
-          <div class="formSection">
-            <label class="formLabel" for="completionGoal">Completion Goal</label>
-            <p class="formDesc">What’s your primary objective?</p>
-            <select class="dropdownSelect" id="completionGoal" name="completionGoal">
+          <div class="form-section">
+            <label class="form-label" for="completionGoal">Completion Goal</label>
+            <p class="form-desc">What’s your primary objective?</p>
+            <select class="dropdown-select" id="completionGoal" name="completionGoal">
               <option value="balanced" selected>Balanced (Recommended)</option>
               <option value="fastest">Fastest (Tight schedule)</option>
               <option value="comfortable">Comfortable (Extra buffer)</option>
             </select>
           </div>
-          <div class="setupActions">
-            <button type="submit" class="btn btnPrimary btnLg" id="generatePlanBtn">Generate Plan
+          <div class="setup-actions">
+            <button type="submit" class="btn btn-primary btn-lg" id="generatePlanBtn">Generate Plan
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </button>
           </div>
@@ -92,7 +109,14 @@
     </section>
   </main>
   <footer class="footer">
-    <div class="container footerContent"><p>&copy; 2026 PlaylistPilot. All rights reserved.</p><div class="footerLinks"><a href="index.html#features">Features</a><a href="index.html#about">About</a><a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a></div></div>
+    <div class="container footer-content">
+      <p>&copy; 2026 PlaylistPilot. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
   </footer>
   <script type="module" src="src/js/mockData.js"></script>
   <script type="module" src="src/js/setup.js"></script>

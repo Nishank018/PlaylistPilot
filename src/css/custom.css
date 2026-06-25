@@ -1,26 +1,217 @@
-/*
-  Custom styles for PlaylistPilot – Added to give a personal touch.
-  These overrides complement the main design system defined in style.css.
-  They showcase subtle adjustments a developer might make while fine‑tuning the UI.
-*/
+/* Custom styles for PlaylistPilot – Adjusted to align BEM class names with existing design system */
 
-/* Example: Slightly adjust the hero headline spacing for a more natural look */
-.hero__headline {
-  margin-top: 0.2rem;
+/* Header and navigation */
+.header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  z-index: 100;
+  height: 50px;
+  display: flex;
+  align-items: center;
 }
 
-/* Example: Tweak button hover to feel more responsive */
+.header__nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #F5F5F7;
+  letter-spacing: -0.02em;
+}
+
+.header__nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  align-items: center;
+}
+
+.header__nav-links a {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.header__nav-links a:hover,
+.header__nav-links a.active {
+  color: #F5F5F7;
+}
+
+.header__mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.header__mobile-nav-panel {
+  display: none;
+  position: fixed;
+  top: 68px;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 99;
+}
+
+.header__mobile-nav-panel.open {
+  display: block;
+}
+
+.header__mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.header__mobile-nav-links a {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  display: block;
+  padding: 0.25rem 0;
+}
+
+.header__mobile-nav-links a:hover {
+  color: var(--color-text-primary);
+}
+
+/* Hero section */
+.hero__container {
+  padding: 7.5rem 0 5.5rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.bg-glow {
+  /* Assuming original .bg-glow had a gradient animation elsewhere; keep existing */
+  opacity: 0.85;
+}
+
+.hero__tagline {
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  font-size: 0.65rem;
+  border: 1px solid var(--color-border-hover);
+}
+
+.hero__subheadline {
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 3.5rem;
+  max-width: 600px;
+  margin-right: auto;
+  margin-left: auto;
+  color: var(--color-text-secondary);
+}
+
+.url-input-form {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto 3.5rem;
+  text-align: left;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+  background-color: #121214;
+  border: 1px solid var(--color-border);
+  padding: 8px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-default);
+  align-items: center;
+}
+
+.input-group:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2);
+}
+
+.input-group-icon {
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.url-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #FFFFFF;
+}
+
+.url-input::placeholder {
+  color: #555558;
+}
+
+/* Feature cards */
+.feature-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem;
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm);
+}
+
+.feature-card:hover {
+  border-color: var(--color-border-hover);
+}
+
+/* Footer */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.footer-links a:hover {
+  color: var(--color-text-primary);
+}
+
+/* Adjusted button hover (already defined in style.css) */
 .btn-primary:hover {
   background-color: #e0e0e5;
   transform: scale(1.015);
 }
 
-/* Example: Add a subtle box‑shadow to cards for depth */
-.features__card {
-  box-shadow: var(--shadow-sm);
-}
-
-/* Example: Reduce the opacity of the background glow for a softer effect */
-.bg-glow {
-  opacity: 0.85;
-}
+/* Reduce opacity of background glow (already set above) */

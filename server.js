@@ -1,12 +1,14 @@
 import app from './api/index.js';
-import express from 'express';
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5002;
 
 // Trim YouTube API Key defensively in the env
 if (process.env.YOUTUBE_API_KEY) {
