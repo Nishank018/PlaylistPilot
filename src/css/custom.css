@@ -1,0 +1,26 @@
+/*
+  Custom styles for PlaylistPilot – Added to give a personal touch.
+  These overrides complement the main design system defined in style.css.
+  They showcase subtle adjustments a developer might make while fine‑tuning the UI.
+*/
+
+/* Example: Slightly adjust the hero headline spacing for a more natural look */
+.hero__headline {
+  margin-top: 0.2rem;
+}
+
+/* Example: Tweak button hover to feel more responsive */
+.btn-primary:hover {
+  background-color: #e0e0e5;
+  transform: scale(1.015);
+}
+
+/* Example: Add a subtle box‑shadow to cards for depth */
+.features__card {
+  box-shadow: var(--shadow-sm);
+}
+
+/* Example: Reduce the opacity of the background glow for a softer effect */
+.bg-glow {
+  opacity: 0.85;
+}
