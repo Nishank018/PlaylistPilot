@@ -1,5 +1,6 @@
 // PlaylistPilot - Mock Database
 // This data is attached to the window object to support both file:// protocol and local servers.
+// Used AI to buld that mock data to test local in your system .
 
 window.PlaylistPilotData = {
   // Helper to get a playlist by URL or ID

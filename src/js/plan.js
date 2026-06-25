@@ -1,5 +1,6 @@
 // PlaylistPilot - Generated Plan JS
 // Implements the timeline generation algorithm, displays study metrics, and generates PDF downloads.
+// Chnaged greedy approch.
 
 const init = () => {
   // --- DOM Elements ---

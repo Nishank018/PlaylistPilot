@@ -1,15 +1,7 @@
 // PlaylistPilot – Setup Page JavaScript
-// --------------------------------------------------------------
-// This file wires up the "Customize Learning Plan" page. It handles
-// reading the selected playlist from localStorage, validating user
-// input, persisting preferences, and finally navigating to the plan
-// view. The code is deliberately written in a straightforward style
-// with descriptive names and helpful comments – just like a developer
-// would write when polishing a personal project.
 
-/**
- * Initialise the page once the DOM is ready.
- */
+
+
 function initSetupPage() {
   // ---------- DOM ELEMENTS ----------
   const form = document.getElementById('learning-preferences-form');

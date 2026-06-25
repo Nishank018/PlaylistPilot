@@ -1,14 +1,5 @@
-// PlaylistPilot – Landing Page JavaScript
-// --------------------------------------------------------------
-// This script powers the landing page where a user pastes a YouTube
-// playlist URL, sees a preview card, and can move on to the setup
-// page. The code is intentionally written in a clear, step‑by‑step
-// fashion with plenty of comments – the kind of hand‑crafted style
-// you’d expect from a developer polishing a personal project.
 
-/**
- * Initialise the page once the DOM is ready.
- */
+
 function initLandingPage() {
   // ---------- DOM ELEMENTS ----------
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -137,9 +128,7 @@ function updateLoadingStatus(msg) {
   if (statusText) statusText.textContent = msg;
 }
 
-/**
- * Display a nicely formatted preview card for the analysed playlist.
- */
+
 function displayPlaylistPreview(playlist) {
   activePlaylistId = playlist.id;
   cardTitle.textContent = playlist.title;
