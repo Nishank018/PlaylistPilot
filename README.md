@@ -1,56 +1,84 @@
 # PlaylistPilot 🧭
 
-I built **PlaylistPilot** because I was constantly adding YouTube playlists to my "watch later" list, only to forget about them weeks later. It felt like a graveyard of unfinished tutorials. One night I asked myself, *"How can I actually finish what I start?"* and the idea for PlaylistPilot was born.
+Turn any YouTube playlist into a day-by-day learning schedule. Paste a playlist, set your daily study time and playback speed — PlaylistPilot does the rest.
 
-PlaylistPilot is a lightweight, client‑side web app that takes any YouTube playlist and turns it into a day‑by‑day learning plan. It respects your preferred playback speed and daily study window, so you get a realistic schedule that you can actually follow.
-
-## 🎨 Design Philosophy
-Inspired by clean, modern tools like **Linear**, **Notion**, and **Stripe**, the UI embraces:
-- **Spacious and minimal layouts** with generous padding.
-- **Subtle dark‑mode palette** – no harsh colors, just elegant contrast.
-- **Micro‑animations** that feel responsive without being distracting.
-
-## ⚙️ Core Features
-- **Smart daily scheduling** – a greedy bin‑packing algorithm distributes videos into manageable daily buckets.
-- **Adjustable playback speed** – the schedule automatically accounts for 1x‑2x speeds.
-- **Revision days** – optional pause days for review and note‑taking.
-- **Client‑side download** – export your plan as a nicely formatted Markdown file.
-- **LocalStorage persistence** – your preferences survive page reloads.
+**Live:** [playlist-pilot-chi.vercel.app](https://playlist-pilot-chi.vercel.app)
 
 ---
 
-## 📁 Project Structure
+## The Problem
+
+Long tutorial playlists sit in "Watch Later" forever. There's no structure, no deadline, no plan. PlaylistPilot fixes that.
+
+---
+
+## Features
+
+- Day-by-day schedule generated from any YouTube playlist
+- Adjustable playback speed (1x–2x)
+- Custom daily study duration
+- Optional revision/rest days
+- Export schedule as Markdown
+- Preferences saved via LocalStorage
+
+---
+
+## Tech Stack
+
+- Vanilla HTML / CSS / JS
+- YouTube Data API v3
+- LocalStorage
+- Vite (dev server)
+
+---
+
+## Project Structure
+
 ```
 PlaylistPilot/
-├── index.html          # Landing page (URL entry & preview)
-├── setup.html          # Settings and schedule generation
-├── plan.html           # Final plan view
+├── index.html
+├── setup.html
+├── plan.html
 ├── src/
-│   ├── css/style.css   # Core stylesheet
+│   ├── css/style.css
 │   └── js/
-│       ├── mockData.js # Sample playlists for offline demo
-│       ├── landing.js  # URL handling & UI glue
-│       ├── setup.js    # Form validation & schedule creation
-│       └── plan.js     # Packing algorithm & plan rendering
-├── package.json        # Dev scripts (Vite server)
-└── README.md           # This file
+│       ├── mockData.js
+│       ├── landing.js
+│       ├── setup.js
+│       └── plan.js
+├── package.json
+└── README.md
 ```
+
 ---
 
-## 🚀 Running the Project
-**Option 1 – Open directly**
-Just double‑click `index.html` and the app runs in any modern browser. No server needed.
+## Running Locally
 
-**Option 2 – Local dev server** (requires Node.js)
 ```bash
-npm install       # install Vite (dev server) if you want hot‑reloading
-npm run dev       # start http://localhost:3000
+# Option 1 — just open index.html in any browser
+
+# Option 2 (recommended)
+npm install
+npm run dev
 ```
-Enjoy turning playlists into actionable learning plans!
+
 ---
 
-## 🙋‍♂️ About Me
-I'm **Nishank Gupta**, a developer who loves turning ideas into polished tools. When I'm not tinkering with side projects, you can find me exploring new JavaScript patterns or hiking in the hills.
+## What I Built / Learned
 
-Feel free to star the repo, open issues, or drop a comment on the GitHub project page.
+- How to integrate and work with a real API inside a frontend app
+- Passing state between pages without a framework
+- Client-side scheduling logic using a greedy bin-packing approach
+- Reading and adapting AI-generated code as part of the build process
+
 ---
+
+## Note on AI
+
+Used AI tools for UI implementation, project structure, and scaffolding the scheduling logic. Studied and adapted the output to understand how everything fits together.
+
+---
+
+## Feedback
+
+Open an issue or start a discussion if you have ideas.
