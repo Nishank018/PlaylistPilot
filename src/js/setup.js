@@ -1,122 +1,134 @@
-// PlaylistPilot - Plan Setup JS
-// Manages form inputs, custom card selections, input validation, and preference persistence.
+// PlaylistPilot – Setup Page JavaScript
+// --------------------------------------------------------------
+// This file wires up the "Customize Learning Plan" page. It handles
+// reading the selected playlist from localStorage, validating user
+// input, persisting preferences, and finally navigating to the plan
+// view. The code is deliberately written in a straightforward style
+// with descriptive names and helpful comments – just like a developer
+// would write when polishing a personal project.
 
-const init = () => {
-  // --- DOM Elements ---
-  const setupContent = document.getElementById('setup-content');
-  const emptyState = document.getElementById('setup-empty-state');
-  const playlistTag = document.getElementById('playlist-tag');
-  
-  const setupForm = document.getElementById('learning-preferences-form');
+/**
+ * Initialise the page once the DOM is ready.
+ */
+function initSetupPage() {
+  // ---------- DOM ELEMENTS ----------
+  const form = document.getElementById('learning-preferences-form');
   const hoursInput = document.getElementById('hours-per-day');
   const hoursError = document.getElementById('hours-error');
   const generateBtn = document.getElementById('generate-plan-btn');
+  const emptyState = document.getElementById('setup-empty-state');
+  const contentSection = document.getElementById('setup-content');
+  const playlistBadge = document.getElementById('playlist-tag');
 
-  // --- GSAP Animations ---
-  if (typeof gsap !== 'undefined' && setupContent && setupContent.style.display !== 'none') {
+  // ---------- ANIMATIONS (GSAP) ----------
+  if (typeof gsap !== 'undefined' && contentSection && contentSection.style.display !== 'none') {
     gsap.from('#setup-header-anim', { opacity: 0, y: -20, duration: 0.6, ease: 'power3.out' });
     gsap.from('#setup-card-anim', { opacity: 0, y: 30, duration: 0.8, delay: 0.1, ease: 'power4.out' });
   }
 
-  // Check localStorage for a selected playlist
-  const selectedPlaylistId = localStorage.getItem('selectedPlaylistId');
-  
-  if (!selectedPlaylistId) {
-    if (setupContent) setupContent.style.display = 'none';
+  // ---------- PLAYLIST LOOKUP ----------
+  const selectedId = localStorage.getItem('selectedPlaylistId');
+  if (!selectedId) {
+    // No playlist selected – show a friendly empty state.
+    if (contentSection) contentSection.style.display = 'none';
     if (emptyState) emptyState.style.display = 'block';
-    return;
+    return; // Nothing else to do.
   }
 
-  // Load Playlist details for header badge
-  let playlist = null;
-  const activePlaylistDetails = localStorage.getItem('activePlaylistDetails');
-  if (activePlaylistDetails) {
-    try {
-      const parsed = JSON.parse(activePlaylistDetails);
-      if (parsed && parsed.id === selectedPlaylistId) {
-        playlist = parsed;
-      }
-    } catch (err) {
-      console.error('Error parsing activePlaylistDetails', err);
-    }
+  // Try to retrieve the full playlist object.
+  const playlist = loadPlaylistDetails(selectedId);
+  if (playlistBadge) {
+    playlistBadge.textContent = `Course: ${playlist.title}`;
+    playlistBadge.className = 'badge badge-primary';
   }
 
-  if (!playlist) {
-    playlist = window.PlaylistPilotData.playlists.find(p => p.id === selectedPlaylistId);
-  }
-
-  if (playlist && playlistTag) {
-    playlistTag.textContent = `Course: ${playlist.title}`;
-    playlistTag.className = 'badge badge-primary';
-  } else if (playlistTag) {
-    playlistTag.textContent = 'Custom Learning Plan';
-  }
-
-  // --- Real-time Validation for Hours Available ---
+  // ---------- VALIDATION ----------
   if (hoursInput) {
-    hoursInput.addEventListener('input', () => {
-      validateHours();
-    });
+    hoursInput.addEventListener('input', () => validateHours(hoursInput, hoursError, generateBtn));
   }
 
-  function validateHours() {
-    const val = parseFloat(hoursInput.value);
-    let isValid = true;
-
-    if (isNaN(val) || val < 0.5 || val > 8) {
-      isValid = false;
-      hoursInput.style.borderColor = 'var(--color-error)';
-      hoursError.style.display = 'flex';
-      generateBtn.classList.add('btn-disabled');
-      generateBtn.disabled = true;
-    } else {
-      hoursInput.style.borderColor = '';
-      hoursError.style.display = 'none';
-      generateBtn.classList.remove('btn-disabled');
-      generateBtn.disabled = false;
-    }
-
-    return isValid;
+  // ---------- FORM SUBMISSION ----------
+  if (form) {
+    form.addEventListener('submit', (e) => handleFormSubmit(e, {
+      hoursInput,
+      hoursError,
+      generateBtn,
+      form
+    }));
   }
-
-  // --- Form Submission Handling ---
-  if (setupForm) {
-    setupForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      if (!validateHours()) {
-        return;
-      }
-
-      // Collect Form Data
-      const hoursPerDay = parseFloat(hoursInput.value);
-      
-      const selectedSpeedRadio = setupForm.querySelector('input[name="playbackSpeed"]:checked');
-      const playbackSpeed = selectedSpeedRadio ? parseFloat(selectedSpeedRadio.value) : 1.0;
-      
-      const selectedIntensityRadio = setupForm.querySelector('input[name="intensity"]:checked');
-      const intensity = selectedIntensityRadio ? selectedIntensityRadio.value : 'consistent';
-      
-      const revisionDaysChecked = document.getElementById('revision-days').checked;
-      
-      const completionGoal = document.getElementById('completion-goal').value;
-
-      // Save to localStorage
-      localStorage.setItem('hoursPerDay', hoursPerDay.toString());
-      localStorage.setItem('playbackSpeed', playbackSpeed.toString());
-      localStorage.setItem('intensity', intensity);
-      localStorage.setItem('revisionDays', revisionDaysChecked.toString());
-      localStorage.setItem('completionGoal', completionGoal);
-
-      // Redirect to generated plan dashboard
-      window.location.href = 'plan.html';
-    });
-  }
-};
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
 }
 
+/**
+ * Load playlist details either from the cached "activePlaylistDetails"
+ * or from the bundled mock data.
+ */
+function loadPlaylistDetails(id) {
+  const cached = localStorage.getItem('activePlaylistDetails');
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      if (parsed && parsed.id === id) return parsed;
+    } catch (_) {
+      // Silently ignore malformed JSON – fall back to mock data.
+    }
+  }
+  // Fallback: look into the static mock data shipped with the app.
+  return window.PlaylistPilotData.playlists.find(p => p.id === id) || {};
+}
+
+/**
+ * Validate the "hours per day" field.
+ * Returns true if the value is within the acceptable range.
+ */
+function validateHours(input, errorBox, submitBtn) {
+  const val = parseFloat(input.value);
+  const isValid = !isNaN(val) && val >= 0.5 && val <= 8;
+  if (!isValid) {
+    input.style.borderColor = 'var(--color-error)';
+    errorBox.style.display = 'flex';
+    submitBtn.classList.add('btn-disabled');
+    submitBtn.disabled = true;
+  } else {
+    input.style.borderColor = '';
+    errorBox.style.display = 'none';
+    submitBtn.classList.remove('btn-disabled');
+    submitBtn.disabled = false;
+  }
+  return isValid;
+}
+
+/**
+ * Gather all form values, persist them, and navigate to the plan page.
+ */
+function handleFormSubmit(event, { hoursInput, hoursError, generateBtn, form }) {
+  event.preventDefault();
+
+  // Abort if the hours field is still invalid.
+  if (!validateHours(hoursInput, hoursError, generateBtn)) return;
+
+  // ----- Extract user selections -----
+  const hoursPerDay = parseFloat(hoursInput.value);
+  const speedRadio = form.querySelector('input[name="playbackSpeed"]:checked');
+  const playbackSpeed = speedRadio ? parseFloat(speedRadio.value) : 1.0;
+  const intensityRadio = form.querySelector('input[name="intensity"]:checked');
+  const intensity = intensityRadio ? intensityRadio.value : 'consistent';
+  const revisionDays = document.getElementById('revision-days').checked;
+  const completionGoal = document.getElementById('completion-goal').value;
+
+  // ----- Persist selections for the plan page -----
+  localStorage.setItem('hoursPerDay', hoursPerDay.toString());
+  localStorage.setItem('playbackSpeed', playbackSpeed.toString());
+  localStorage.setItem('intensity', intensity);
+  localStorage.setItem('revisionDays', revisionDays.toString());
+  localStorage.setItem('completionGoal', completionGoal);
+
+  // ----- Navigate to the generated plan -----
+  window.location.href = 'plan.html';
+}
+
+// Kick off the initialisation once the DOM is ready.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSetupPage);
+} else {
+  initSetupPage();
+}
