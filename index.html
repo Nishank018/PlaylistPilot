@@ -7,7 +7,6 @@
   <meta name="description" content="Turn any YouTube playlist into a personalized, day‑by‑day study schedule. No more endless scrolling – just focused learning." />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="stylesheet" href="src/css/style.css" />
-<link rel="stylesheet" href="src/css/custom.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
@@ -32,7 +31,13 @@
             </a>
           </li>
         </ul>
-        <button class="header__mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Navigation Menu"></button>
+        <button class="header__mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </nav>
     <!-- Mobile Navigation Drawer -->

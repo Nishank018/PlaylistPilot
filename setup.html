@@ -19,8 +19,8 @@
           PlaylistPilot
         </a>
         <ul class="header__nav-links" id="desktop-nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#about">About</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#about">About</a></li>
           <li>
             <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer" class="header__github-link">
               <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
@@ -30,8 +30,23 @@
             </a>
           </li>
         </ul>
+        <button class="header__mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </nav>
+    <!-- Mobile Navigation Drawer -->
+    <div class="header__mobile-nav-panel" id="mobile-nav-panel">
+      <ul class="header__mobile-nav-links">
+        <li><a href="index.html#features" id="mobile-link-features">Features</a></li>
+        <li><a href="index.html#about" id="mobile-link-about">About</a></li>
+        <li><a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+      </ul>
+    </div>
   </header>
   <main class="container">
     <section class="emptyState" id="setupEmptyState" style="display:none;">

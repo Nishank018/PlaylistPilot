@@ -8,6 +8,7 @@
 let activePlaylistId = null;
 let form, hoursInput, hoursError, generateBtn;
 let emptyState, contentSection, playlistBadge;
+let mobileMenuBtn, mobileNavPanel;
 
 /** Initialise the setup page once the DOM is ready. */
 function initSetupPage() {
@@ -20,6 +21,36 @@ function initSetupPage() {
   emptyState = document.getElementById('setupEmptyState');
   contentSection = document.getElementById('setupContent');
   playlistBadge = document.getElementById('playlistTag');
+
+  mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  mobileNavPanel = document.getElementById('mobile-nav-panel');
+
+  // ---------- MOBILE MENU TOGGLE ----------
+  if (mobileMenuBtn && mobileNavPanel) {
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mobileNavPanel.classList.toggle('open');
+      const isOpen = mobileNavPanel.classList.contains('open');
+      mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+      mobileMenuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'none';
+    });
+
+    mobileNavPanel.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNavPanel.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenuBtn.style.transform = 'none';
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!mobileNavPanel.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+        mobileNavPanel.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenuBtn.style.transform = 'none';
+      }
+    });
+  }
 
   // ---------- ANIMATIONS (GSAP) ----------
   if (typeof gsap !== 'undefined' && contentSection && contentSection.style.display !== 'none') {

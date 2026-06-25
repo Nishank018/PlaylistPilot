@@ -7,6 +7,36 @@ const init = () => {
   const planContent = document.getElementById('plan-content');
   const emptyState = document.getElementById('plan-empty-state');
   
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileNavPanel = document.getElementById('mobile-nav-panel');
+
+  // ---------- MOBILE MENU TOGGLE ----------
+  if (mobileMenuBtn && mobileNavPanel) {
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mobileNavPanel.classList.toggle('open');
+      const isOpen = mobileNavPanel.classList.contains('open');
+      mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+      mobileMenuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'none';
+    });
+
+    mobileNavPanel.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNavPanel.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenuBtn.style.transform = 'none';
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!mobileNavPanel.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+        mobileNavPanel.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenuBtn.style.transform = 'none';
+      }
+    });
+  }
+  
   // Header Info
   const planPlaylistTitle = document.getElementById('plan-playlist-title');
   const planPlaylistCreator = document.getElementById('plan-playlist-creator');

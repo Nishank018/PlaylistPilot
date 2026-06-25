@@ -45,7 +45,7 @@ function initLandingPage() {
     gsap.from('#hero-sub', { opacity: 0, y: 20, duration: 0.8, delay: 0.25, ease: 'power3.out' });
     gsap.from('#hero-form', { opacity: 0, y: 15, duration: 0.6, delay: 0.45, ease: 'power3.out' });
     // Feature cards staggered entry
-    gsap.from('.feature-card', { opacity: 0, y: 40, duration: 0.8, stagger: 0.15, delay: 0.6, ease: 'power3.out' });
+    gsap.from('.features__card', { opacity: 0, y: 40, duration: 0.8, stagger: 0.15, delay: 0.6, ease: 'power3.out' });
   }
 
   // ---------- MOUSE MOVE PARALLAX (ambient glow) ----------
@@ -53,7 +53,7 @@ function initLandingPage() {
     document.addEventListener('mousemove', (e) => {
       const xPos = (e.clientX / window.innerWidth - 0.5) * 35;
       const yPos = (e.clientY / window.innerHeight - 0.5) * 35;
-      gsap.to('.hero-glow', { x: xPos, y: yPos, duration: 1.2, ease: 'power2.out' });
+      gsap.to('.hero__glow', { x: xPos, y: yPos, duration: 1.2, ease: 'power2.out' });
       gsap.to('.bg-glow', { x: -xPos * 0.4, y: -yPos * 0.4, duration: 1.6, ease: 'power2.out' });
     });
   }
