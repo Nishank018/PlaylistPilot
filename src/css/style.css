@@ -281,7 +281,7 @@ footer {
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-full); /* Apple Pill Shape */
+  border-radius: var(--radius-md); /* Smooth rounded corners */
   border: 1px solid transparent;
   cursor: pointer;
   transition: var(--transition-default);
