@@ -4,15 +4,8 @@ PlaylistPilot is a high-fidelity, client-side web application prototype that tra
 
 Built as a modern, production-grade frontend portfolio project using **Vanilla HTML5, CSS3, and JavaScript** without any external frameworks (React, Vue, Tailwind, etc.).
 
----
 
-## 🎨 Design Philosophy
-Inspired by **Linear, Notion, and Stripe**:
-- **Spacious & Minimal**: Clean layouts with ample padding and sharp typography.
-- **Strict Color Scheme**: Pure white backgrounds (`#FFFFFF`), dark slate text (`#111827`), vibrant blue accent cues (`#2563EB`), and light gray borders (`#E5E7EB`).
-- **High Performance & Responsive**: Fast client-side rendering with no external script bloat and absolute mobile responsiveness.
 
----
 
 ## ⚙️ Key Technical Features
 
