@@ -3,190 +3,333 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PlaylistPilot – Transform Playlists into Learning Plans</title>
-  <meta name="description" content="Turn any YouTube playlist into a personalized, day‑by‑day study schedule. No more endless scrolling – just focused learning." />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <title>PlaylistPilot</title>
+  <meta name="description" content="Ingest long YouTube tutorial playlists, calibrate playback speeds, and generate structured daily study plans." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate icon" type="image/png" href="/favicon.png" />
   <link rel="stylesheet" href="src/css/style.css" />
+  <script>
+    (function() {
+      var savedTheme = localStorage.getItem('playlistpilot_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
-  <!-- Ambient background glow -->
   <div class="bg-glow"></div>
 
-  <!-- Header & Navigation -->
-  <header class="header">
-    <nav class="header__nav" id="main-navbar">
-      <div class="container">
-        <a href="index.html" class="header__logo" id="nav-logo">
-          <span class="header__logo-icon"></span>
-          PlaylistPilot
+  <div class="site-frame">
+    <!-- Ultra-Sleek Apple Floating Glass Navbar Island -->
+    <div class="header-wrapper">
+      <header class="site-header">
+        <a href="index.html" class="wordmark">
+          <span class="wordmark-led"></span>
+          <span>PlaylistPilot</span>
+          <span class="wordmark-badge">v2.0</span>
         </a>
-        <ul class="header__nav-links" id="desktop-nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#about">About</a></li>
-          <li>
-            <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer" class="header__github-link">
-              <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-              GitHub
-            </a>
-          </li>
-        </ul>
-        <button class="header__mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-    </nav>
-    <!-- Mobile Navigation Drawer -->
+        <nav class="main-nav" aria-label="Main Navigation">
+          <a class="main-nav__link active" href="index.html">Home</a>
+          <a class="main-nav__link" href="#features">Engine Features</a>
+          <a class="main-nav__link" href="#how-it-works">Workflow</a>
+          <a class="main-nav__link" href="#faq">FAQ</a>
+        </nav>
+        <div class="header-actions">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="Toggle Light/Dark Theme">
+            <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+          <button class="header__mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </header>
+    </div>
+
+    <!-- Mobile Drawer -->
     <div class="header__mobile-nav-panel" id="mobile-nav-panel">
       <ul class="header__mobile-nav-links">
-        <li><a href="#features" id="mobile-link-features">Features</a></li>
-        <li><a href="#about" id="mobile-link-about">About</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#features">Engine Features</a></li>
+        <li><a href="#how-it-works">Workflow</a></li>
+        <li><a href="#faq">FAQ</a></li>
         <li><a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a></li>
       </ul>
     </div>
-  </header>
 
-  <main>
-    <!-- Hero Section -->
-    <section class="hero" id="hero-section">
-      <div class="container hero__container" style="position: relative;">
-        <div class="hero__glow"></div>
-        <span class="badge badge-primary hero__tagline" id="hero-tag">Curate your learning</span>
-        <h1 class="hero__headline" id="hero-title">Playlists to plans,<br/>instantly.</h1>
-        <p class="hero__subheadline" id="hero-sub">
-          Transform any YouTube playlist into a clean, daily learning schedule that fits your life.
-        </p>
-        <div class="hero__url-input-form" id="hero-form">
-          <div class="hero__input-group">
-            <div class="hero__input-group-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-            </div>
-            <input type="url" class="hero__url-input" id="playlist-url" placeholder="Paste a YouTube playlist URL (e.g. https://www.youtube.com/playlist?list=…)" required autocomplete="off" />
-            <button class="btn btn-primary btn-lg" id="analyze-btn">Analyze Playlist</button>
-          </div>
-          <div class="error-message" id="url-error" style="display:none;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:text-bottom;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span id="error-text">Please enter a valid YouTube playlist URL.</span>
-          </div>
-        </div>
-        <!-- Skeleton Loader -->
-        <div class="loading-wrapper" id="skeleton-loader" style="display:none;">
-          <div class="skeleton-card">
-            <div class="skeleton-thumbnail"></div>
-            <div class="skeleton-info">
-              <div class="skeleton-line title"></div>
-              <div class="skeleton-line creator"></div>
-              <div class="skeleton-line stats"></div>
-              <div id="loading-status" style="margin-top:0.5rem;font-size:0.875rem;color:var(--color-accent-hover);font-weight:500;display:flex;align-items:center;gap:0.5rem;">
-                <span class="status-spinner" style="width:12px;height:12px;border:2px solid var(--color-accent-light);border-top-color:var(--color-accent);border-radius:50%;display:inline-block;animation:spin 1s linear infinite;"></span>
-                <span id="loading-status-text">Analyzing playlist…</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Playlist Preview Card -->
-        <div class="playlist-preview-wrapper" id="playlist-preview" style="display:none;">
-          <div class="playlist-card">
-            <div class="playlist-thumbnail-container" id="playlist-thumbnail-container">
-              <div class="playlist-gradient-thumb" id="playlist-thumb">JS</div>
-              <div class="playlist-badge-overlay"><span id="card-video-count-badge">0</span></div>
-            </div>
-            <div class="playlist-details">
-              <div>
-                <div class="playlist-meta-top">
-                  <span class="badge badge-gray" id="card-category">Development</span>
-                  <span class="badge badge-success">Analyzed</span>
-                </div>
-                <h3 class="playlist-title" id="card-title">Playlist Title</h3>
-                <p class="playlist-creator" id="card-creator">by Creator Name</p>
-              </div>
-              <div class="playlist-stats-row">
-                <span class="playlist-stat">Videos: <strong id="card-video-count">0</strong></span>
-                <span class="playlist-stat">Duration: <strong id="card-duration">0 Hours</strong></span>
-                <span class="playlist-stat">Est. Time: <strong id="card-est-days">0 Days</strong></span>
-              </div>
-              <div class="playlist-cta-box" style="margin-top: 1.25rem;">
-                <button class="btn btn-primary" id="create-plan-btn">
-                  Create Learning Plan
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:0.35rem; vertical-align:middle;">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Product Features -->
-    <section class="features-section" id="features">
+    <!-- Main Content -->
+    <main>
       <div class="container">
-        <div class="section-header">
-          <span class="badge badge-gray" style="margin-bottom:0.75rem;">Features</span>
-          <h2>Build Habits, Not Just Playlists</h2>
-          <p>PlaylistPilot gives you the dashboard and structures needed to turn passive viewing into active learning.</p>
-        </div>
-        <div class="features-grid">
-          <div class="features__card">
-            <div class="feature-icon-wrapper">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            </div>
-            <h3>Smart Daily Scheduling</h3>
-            <p>Input your daily availability, and our algorithm splits videos into manageable, daily milestones that keep you moving.</p>
+        <!-- Hero Section -->
+        <section class="hero-profile-row" id="hero-section">
+          <!-- Real-Time Platform Visitor Tracker Badge -->
+          <div class="hero-visitor-badge" id="hero-visitor-badge" title="Real-Time Unique Visitors">
+            <span class="visitor-pulse-dot"></span>
+            <span class="visitor-count-label">Platform Visits:</span>
+            <strong class="visitor-count-num" id="hero-visitor-count">1</strong>
           </div>
-          <div class="features__card">
-            <div class="feature-icon-wrapper">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+
+          <div class="eyebrow">AUTOMATED YOUTUBE SYLLABUS ENGINE · V2.0</div>
+          <h1 class="hero-title" id="hero-title">
+            Turn 50-hour playlists into<br/>
+            <span class="typewriter-wrapper">
+              <span class="typewriter-text" id="typewriter-text">10-day roadmaps.</span>
+              <span class="typewriter-cursor">|</span>
+            </span>
+          </h1>
+          <p class="hero-subtitle" id="hero-sub">
+            Transform any YouTube course playlist into a personalized, daily study schedule with smart speed calibration.
+          </p>
+
+          <!-- Input Launchpad Bar -->
+          <div class="ask-form" id="hero-form">
+            <div class="input-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </div>
-            <h3>Adjustable Speed Settings</h3>
-            <p>Prefer watching at 1.25x or 1.5x? We calculate exact timeline completions adjusted for your preferred playback speed.</p>
+            <input type="url" class="ask-input" id="playlist-url" placeholder="Paste YouTube playlist URL (e.g. youtube.com/playlist?list=…)" required autocomplete="off" />
+            <button class="ask-btn" id="analyze-btn">
+              <span>Generate Roadmap</span>
+              <kbd class="kbd-enter">↵</kbd>
+            </button>
           </div>
-          <div class="features__card">
-            <div class="feature-icon-wrapper">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><polyline points="12 6 12 12 16 14"/></svg>
+
+          <!-- Quick Demo Chips -->
+          <div class="preset-chips">
+            <span class="preset-chip-label">Try instant demo:</span>
+            <button class="chip" data-demo="js">⚡ JS Engine Masterclass</button>
+            <button class="chip" data-demo="uiux">🎨 Figma UI/UX System</button>
+            <button class="chip" data-demo="python">🐍 Python & Algorithmic Design</button>
+          </div>
+
+          <!-- Error Feedback -->
+          <div class="error-message" id="url-error" style="display:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="error-text">Please enter a valid public YouTube playlist URL or ID.</span>
+          </div>
+
+          <!-- Skeleton Loader -->
+          <div class="loading-wrapper" id="skeleton-loader" style="display:none;width:100%;max-width:760px;">
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">playlist_engine.py</span>
+              </div>
+              <div class="project-meta-body">
+                <div class="skeleton-card" style="background:transparent;padding:0;">
+                  <div class="skeleton-thumbnail"></div>
+                  <div class="skeleton-info">
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line creator"></div>
+                    <div class="skeleton-line stats"></div>
+                    <div id="loading-status" style="margin-top:0.5rem;font-size:0.85rem;color:var(--color-accent);display:flex;align-items:center;gap:0.5rem;">
+                      <span class="status-spinner" style="width:12px;height:12px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin 1s linear infinite;"></span>
+                      <span id="loading-status-text">Querying YouTube Data API v3 metadata…</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3>Flexible Study Revision</h3>
-            <p>Toggle dedicated revision days to pause the course and review notes, ensuring you build long‑term retention.</p>
           </div>
-        </div>
+
+          <!-- Playlist Preview Card Mockup -->
+          <div class="playlist-preview-wrapper" id="playlist-preview" style="display:none;width:100%;max-width:760px;">
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">playlist_analysis_result.json</span>
+              </div>
+              <div class="project-meta-body">
+                <div class="playlist-card" style="background:transparent;border:none;padding:0;box-shadow:none;">
+                  <div class="playlist-thumbnail-container" id="playlist-thumbnail-container">
+                    <div class="playlist-gradient-thumb" id="playlist-thumb">JS</div>
+                    <div class="playlist-badge-overlay"><span id="card-video-count-badge">0</span> videos</div>
+                  </div>
+                  <div class="playlist-details">
+                    <div>
+                      <span class="status-badge" id="card-category">Verified Course</span>
+                      <h3 class="playlist-title" id="card-title">Playlist Title</h3>
+                      <p class="playlist-creator" id="card-creator">by Creator Name</p>
+                    </div>
+                    <div class="playlist-stats-row">
+                      <span class="playlist-stat">Total Items: <strong id="card-video-count">0</strong></span>
+                      <span class="playlist-stat">Raw Duration: <strong id="card-duration">0 Hours</strong></span>
+                      <span class="playlist-stat">Est. Completion: <strong id="card-est-days">0 Days</strong></span>
+                    </div>
+                    <div style="margin-top: 1.25rem;">
+                      <button class="btn btn-primary" id="create-plan-btn">
+                        Configure Execution Pacing →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 01: Production Engine Features -->
+        <section class="home-section" id="features">
+          <div class="section-header">
+            <span class="section-tag">Engine Architecture</span>
+            <h2 class="section-title">Built for High-Velocity Learning</h2>
+            <p class="section-subtitle">Intelligent algorithms designed to optimize every hour of study time.</p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:1.25rem;">
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">scheduler_bin_packing.rs</span>
+              </div>
+              <div class="project-meta-body">
+                <span class="status-badge">Automated Balancing</span>
+                <h3>Greedy Bin-Packing</h3>
+                <p style="font-size:0.88rem;margin-top:0.4rem;">Packs videos tightly against your exact daily quota. Long 4-hour lectures split across days with a 3-minute recap buffer so context is preserved.</p>
+                <div class="chip-list">
+                  <span>Bin-Packing</span>
+                  <span>Overlap Buffer</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">speed_multiplier.ts</span>
+              </div>
+              <div class="project-meta-body">
+                <span class="status-badge">Real-time Math</span>
+                <h3>Speed Calibration</h3>
+                <p style="font-size:0.88rem;margin-top:0.4rem;">Calculate completion down to the second adjusted for 1.25x, 1.5x, 1.75x, or 2x viewing speeds, saving up to 40% total study time.</p>
+                <div class="chip-list">
+                  <span>1.0x — 2.0x Speeds</span>
+                  <span>Time Saved</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">export_engine.pdf</span>
+              </div>
+              <div class="project-meta-body">
+                <span class="status-badge">PDF & LocalStorage</span>
+                <h3>Vector PDF Export</h3>
+                <p style="font-size:0.88rem;margin-top:0.4rem;">Check off completed videos in real-time with browser persistence. Export structured, print-ready vector PDF roadmaps for offline study.</p>
+                <div class="chip-list">
+                  <span>jsPDF Engine</span>
+                  <span>LocalStorage</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 02: Execution Workflow -->
+        <section class="home-section" id="how-it-works">
+          <div class="section-header">
+            <span class="section-tag">Execution Pipeline</span>
+            <h2 class="section-title">Three Steps to Playlist Mastery</h2>
+            <p class="section-subtitle">From raw YouTube link to a day-by-day roadmap in seconds.</p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:1.25rem;">
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">01_ingest.sh</span>
+              </div>
+              <div class="project-meta-body">
+                <span class="status-badge">Step 01</span>
+                <h3>Ingest Playlist</h3>
+                <p style="font-size:0.88rem;margin-top:0.4rem;">Paste any public YouTube playlist link. The backend queries video durations and metadata via API batch requests.</p>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">02_calibrate.sh</span>
+              </div>
+              <div class="project-meta-body">
+                <span class="status-badge">Step 02</span>
+                <h3>Calibrate Pacing</h3>
+                <p style="font-size:0.88rem;margin-top:0.4rem;">Set daily study hours, speed multiplier, packing intensity, and optional weekly revision rest days.</p>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-visual">
+                <span class="project-window"><i></i><i></i><i></i></span>
+                <span class="project-title-bar">03_execute.sh</span>
+              </div>
+              <div class="project-meta-body">
+                <span class="status-badge">Step 03</span>
+                <h3>Execute & Track</h3>
+                <p style="font-size:0.88rem;margin-top:0.4rem;">Check off completed daily items, monitor percentage progress, and export clean PDF roadmaps.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 03: FAQ & Tech Specs -->
+        <section class="home-section" id="faq">
+          <div class="section-header">
+            <span class="section-tag">System FAQ</span>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Everything you need to know about duration parsing, playback math, and privacy.</p>
+          </div>
+
+          <div class="experience-list">
+            <details class="experience-item" open>
+              <summary>
+                <span class="experience-org">🔒 Is YouTube account login required?</span>
+                <span class="experience-meta">Privacy-First</span>
+              </summary>
+              <div class="experience-body">
+                <p>No. PlaylistPilot requires zero authentication or accounts. Simply paste any public YouTube playlist URL and build your schedule instantly.</p>
+              </div>
+            </details>
+
+            <details class="experience-item" open>
+              <summary>
+                <span class="experience-org">🧩 How does long video splitting work?</span>
+                <span class="experience-meta">Context Protection</span>
+              </summary>
+              <div class="experience-body">
+                <p>If a single video exceeds your remaining daily quota, PlaylistPilot intelligently splits it across adjacent days, adding a 3-minute overlap buffer on the continuation segment to ensure seamless comprehension.</p>
+              </div>
+            </details>
+
+            <details class="experience-item" open>
+              <summary>
+                <span class="experience-org">💾 Where is progress saved?</span>
+                <span class="experience-meta">Browser Storage</span>
+              </summary>
+              <div class="experience-body">
+                <p>All checked items, speed configurations, and target dates are stored locally in your browser's LocalStorage. Your data remains 100% private and persistent across visits.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
       </div>
-    </section>
+    </main>
 
-    <!-- About Section -->
-    <section class="container" id="about" style="padding:6.5rem 0;text-align:center;max-width:680px;">
-      <h2 style="margin-bottom:1rem;">About PlaylistPilot</h2>
-      <p style="font-size:1rem;line-height:1.6;margin-bottom:1.5rem;color:var(--color-text-secondary);">
-        I built PlaylistPilot because I kept losing track of the mountain of YouTube tutorials I wanted to finish. It felt like a graveyard of unfinished playlists. By mapping each playlist to a calendar, you finally get a roadmap to finish what you started.
-      </p>
-      <p style="font-size:0.875rem;color:var(--color-text-secondary);"><strong>Tech stack:</strong> Node.js, Express, and vanilla JavaScript.</p>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container footer-content">
-      <p>&copy; 2026 PlaylistPilot. All rights reserved. Designed for portfolios and prototypes.</p>
-      <div class="footer-links">
-        <a href="#features">Features</a>
-        <a href="#about">About</a>
-        <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="site-footer__bottom">
+        <span>PlaylistPilot · © 2026 Production-Ready Execution Engine</span>
+        <span class="live-clock">
+          <span class="live-clock__dot"></span>
+          LIVE · IST <span id="live-ist-clock">--:--:--</span>
+        </span>
       </div>
-    </div>
-  </footer>
-
-  <!-- Visitor Counter (optional) -->
-  <div id="visitor-counter" class="visitor-counter hidden" aria-label="Website visit count">
-    <span class="pulse-dot"></span>
-    <span class="counter-label">Views:</span>
-    <span id="visitor-count" class="counter-value">...</span>
+    </footer>
   </div>
 
+  <script type="module" src="src/js/theme.js"></script>
   <script type="module" src="src/js/mockData.js"></script>
   <script type="module" src="src/js/landing.js"></script>
 </body>

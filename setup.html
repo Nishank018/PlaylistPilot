@@ -3,136 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Customize Your Learning Plan – PlaylistPilot</title>
+  <title>PlaylistPilot</title>
   <meta name="description" content="Set your learning preferences, playback speed, and intensity to generate a personalized schedule." />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate icon" type="image/png" href="/favicon.png" />
   <link rel="stylesheet" href="src/css/style.css" />
+  <script>
+    (function() {
+      var savedTheme = localStorage.getItem('playlistpilot_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
   <div class="bg-glow"></div>
-  <header class="header">
-    <nav class="header__nav" id="main-navbar">
-      <div class="container">
-        <a href="index.html" class="header__logo" id="nav-logo">
-          <span class="header__logo-icon"></span>
-          PlaylistPilot
+
+  <div class="site-frame">
+    <!-- Ultra-Sleek Apple Floating Glass Navbar Island -->
+    <div class="header-wrapper">
+      <header class="site-header">
+        <a href="index.html" class="wordmark">
+          <span class="wordmark-led"></span>
+          <span>PlaylistPilot</span>
+          <span class="wordmark-badge">v2.0</span>
         </a>
-        <ul class="header__nav-links" id="desktop-nav-links">
-          <li><a href="index.html#features">Features</a></li>
-          <li><a href="index.html#about">About</a></li>
-          <li>
-            <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer" class="header__github-link">
-              <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-              </svg>
-              GitHub
-            </a>
-          </li>
-        </ul>
-        <button class="header__mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-    </nav>
-    <!-- Mobile Navigation Drawer -->
-    <div class="header__mobile-nav-panel" id="mobile-nav-panel">
-      <ul class="header__mobile-nav-links">
-        <li><a href="index.html#features" id="mobile-link-features">Features</a></li>
-        <li><a href="index.html#about" id="mobile-link-about">About</a></li>
-        <li><a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-      </ul>
+        <nav class="main-nav" aria-label="Main Navigation">
+          <a class="main-nav__link" href="index.html">Home</a>
+          <a class="main-nav__link" href="index.html#features">Features</a>
+          <a class="main-nav__link" href="index.html#faq">FAQ</a>
+        </nav>
+        <div class="header-actions">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="Toggle Light/Dark Theme">
+            <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+        </div>
+      </header>
     </div>
-  </header>
-  <main class="container">
-    <section class="emptyState" id="setupEmptyState" style="display:none;">
-      <div class="emptyStateIcon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-      </div>
-      <h2>No Playlist Selected</h2>
-      <p>Pick a playlist on the homepage before customizing.</p>
-      <a href="index.html" class="btn btn-primary btn-lg">Go to Homepage</a>
-    </section>
-    <section class="setup-layout" id="setupContent">
-      <div class="setup-header" id="setupHeaderAnim">
-        <span class="badge badge-primary" style="margin-bottom:0.5rem;" id="playlistTag">Loading Playlist…</span>
-        <h1>Customize Your Learning Plan</h1>
-        <p>Tell us your preferences and we'll craft a daily schedule.</p>
-      </div>
-      <div class="setup-form-card" id="setupCardAnim">
-        <form id="learningPreferencesForm" novalidate>
-          <div class="form-section">
-            <label class="form-label" for="hoursPerDay">Hours Per Day</label>
-            <p class="form-desc">How much time can you study each day?</p>
-            <input type="number" class="text-input" id="hoursPerDay" name="hoursPerDay" min="0.5" max="8" step="0.5" value="2.0" required />
-            <div class="error-message" id="hoursError"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> <span>Please enter 0.5‑8 hrs.</span></div>
+
+    <main class="container">
+      <!-- Empty State -->
+      <section class="emptyState" id="setupEmptyState" style="display:none;">
+        <div class="emptyStateIcon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h2>No Active Playlist Selected</h2>
+        <p style="margin-bottom:1.5rem;">Select or analyze a playlist on the homepage before calibrating execution parameters.</p>
+        <a href="index.html" class="btn btn-primary">Go to Homepage</a>
+      </section>
+
+      <!-- Setup Content -->
+      <section class="setup-layout" id="setupContent">
+        <div class="section-header">
+          <span class="section-tag">Parameter Configuration</span>
+          <h2 class="section-title">Calibrate Execution Plan</h2>
+          <p class="section-subtitle">Fine-tune daily study hours, speed multiplier, and packing intensity.</p>
+        </div>
+
+        <div class="project-card setup-card-glass" id="setupCardAnim">
+          <div class="project-visual">
+            <span class="project-window"><i></i><i></i><i></i></span>
+            <span class="project-title-bar" id="playlistTag">pacing_config.json</span>
           </div>
-          <div class="form-section">
-            <label class="form-label">Playback Speed</label>
-            <p class="form-desc">Adjust duration calculations.</p>
-            <div class="segmented-control">
-              <div class="segmented-option"><input type="radio" id="speed1x" name="playbackSpeed" value="1" checked /><label for="speed1x" class="segmented-label">1x</label></div>
-              <div class="segmented-option"><input type="radio" id="speed125x" name="playbackSpeed" value="1.25" /><label for="speed125x" class="segmented-label">1.25x</label></div>
-              <div class="segmented-option"><input type="radio" id="speed15x" name="playbackSpeed" value="1.5" /><label for="speed15x" class="segmented-label">1.5x</label></div>
-              <div class="segmented-option"><input type="radio" id="speed175x" name="playbackSpeed" value="1.75" /><label for="speed175x" class="segmented-label">1.75x</label></div>
-              <div class="segmented-option"><input type="radio" id="speed2x" name="playbackSpeed" value="2" /><label for="speed2x" class="segmented-label">2x</label></div>
-            </div>
-          </div>
-          <div class="form-section">
-            <label class="form-label">Learning Intensity</label>
-            <p class="form-desc">How tightly should we pack videos each day?</p>
-            <div class="intensity-cards-grid">
-              <div class="intensity-card-option"><input type="radio" id="intensityCasual" name="intensity" value="casual" /><label for="intensityCasual" class="intensity-card-label"><span class="intensity-title">Casual</span><span class="intensity-desc">Relaxed (80% load).</span></label></div>
-              <div class="intensity-card-option"><input type="radio" id="intensityConsistent" name="intensity" value="consistent" checked /><label for="intensityConsistent" class="intensity-card-label"><span class="intensity-title">Consistent</span><span class="intensity-desc">Balanced (100% load).</span></label></div>
-              <div class="intensity-card-option"><input type="radio" id="intensityIntensive" name="intensity" value="intensive" /><label for="intensityIntensive" class="intensity-card-label"><span class="intensity-title">Intensive</span><span class="intensity-desc">Pushed (120% load).</span></label></div>
-            </div>
-          </div>
-          <div class="form-section">
-            <label class="form-label">Weekly Revision Day</label>
-            <div class="toggle-wrapper">
-              <div class="toggle-info">
-                <p class="toggle-title">Revision Day</p>
-                <p class="toggle-desc">Rest day with no new videos.</p>
+
+          <div class="project-meta-body">
+            <form id="learningPreferencesForm" novalidate>
+
+              <!-- Section: Daily Hours -->
+              <div class="form-section">
+                <label class="form-label" for="hoursPerDay">Daily Availability Quota</label>
+                <p class="form-desc">Target study hours dedicated to this course per day.</p>
+                <div class="hours-counter-capsule">
+                  <button type="button" class="counter-btn" id="hours-minus" aria-label="Decrease hours">-</button>
+                  <input type="number" class="counter-input" id="hoursPerDay" name="hoursPerDay" min="0.5" max="8" step="0.5" value="2.0" required />
+                  <button type="button" class="counter-btn" id="hours-plus" aria-label="Increase hours">+</button>
+                  <span class="counter-badge">hrs / day</span>
+                </div>
+                <div class="error-message" id="hoursError" style="display:none;margin-top:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> <span>Please specify between 0.5 and 8.0 hours.</span></div>
               </div>
-              <label class="toggle-switch"><input type="checkbox" id="revisionDays" name="revisionDays" checked /><span class="toggle-slider"></span></label>
-            </div>
+
+              <!-- Section: Playback Speed -->
+              <div class="form-section">
+                <label class="form-label">Playback Speed Calibration</label>
+                <p class="form-desc">Adjust watch time math based on your viewing speed.</p>
+                <div class="segmented-control">
+                  <div class="segmented-option"><input type="radio" id="speed1x" name="playbackSpeed" value="1" checked /><label for="speed1x" class="segmented-label">1.0x</label></div>
+                  <div class="segmented-option"><input type="radio" id="speed125x" name="playbackSpeed" value="1.25" /><label for="speed125x" class="segmented-label">1.25x</label></div>
+                  <div class="segmented-option"><input type="radio" id="speed15x" name="playbackSpeed" value="1.5" /><label for="speed15x" class="segmented-label">1.5x</label></div>
+                  <div class="segmented-option"><input type="radio" id="speed175x" name="playbackSpeed" value="1.75" /><label for="speed175x" class="segmented-label">1.75x</label></div>
+                  <div class="segmented-option"><input type="radio" id="speed2x" name="playbackSpeed" value="2" /><label for="speed2x" class="segmented-label">2.0x</label></div>
+                </div>
+              </div>
+
+              <!-- Section: Learning Intensity -->
+              <div class="form-section">
+                <label class="form-label">Packing Density Strategy</label>
+                <p class="form-desc">Choose video load distribution per day.</p>
+                <div class="intensity-cards-grid">
+                  <div class="intensity-card-option">
+                    <input type="radio" id="intensityCasual" name="intensity" value="casual" />
+                    <label for="intensityCasual" class="intensity-card-label">
+                      <span class="intensity-icon">🍃</span>
+                      <span class="intensity-title">Casual</span>
+                      <span class="intensity-desc">Relaxed (80% capacity)</span>
+                    </label>
+                  </div>
+                  <div class="intensity-card-option">
+                    <input type="radio" id="intensityConsistent" name="intensity" value="consistent" checked />
+                    <label for="intensityConsistent" class="intensity-card-label">
+                      <span class="intensity-icon">⚡</span>
+                      <span class="intensity-title">Consistent</span>
+                      <span class="intensity-desc">Balanced (100% capacity)</span>
+                    </label>
+                  </div>
+                  <div class="intensity-card-option">
+                    <input type="radio" id="intensityIntensive" name="intensity" value="intensive" />
+                    <label for="intensityIntensive" class="intensity-card-label">
+                      <span class="intensity-icon">🔥</span>
+                      <span class="intensity-title">Intensive</span>
+                      <span class="intensity-desc">Pushed (120% capacity)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section: Weekly Revision Days -->
+              <div class="form-section">
+                <label class="form-label">Weekly Consolidation Pause</label>
+                <div class="toggle-wrapper">
+                  <div>
+                    <p class="toggle-title">Include Rest & Revision Day Every 7th Day</p>
+                    <p class="toggle-desc">Dedicated day to review notes, consolidate learning, and build projects.</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="revisionDays" name="revisionDays" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Section: Completion Goal -->
+              <div class="form-section">
+                <label class="form-label" for="completionGoal">Completion Strategy</label>
+                <p class="form-desc">Define your primary timeline target.</p>
+                <div class="custom-select-wrapper">
+                  <select class="dropdown-select" id="completionGoal" name="completionGoal" aria-label="Completion Strategy Target">
+                    <option value="balanced" selected>Balanced Target (Recommended)</option>
+                    <option value="fastest">Fastest Sprint (High density load)</option>
+                    <option value="comfortable">Comfortable Buffer (Flexible pacing)</option>
+                  </select>
+                  <span class="custom-select-arrow" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Submit CTA -->
+              <div style="display:flex;justify-content:flex-end;margin-top:2rem;">
+                <button type="submit" class="ask-btn form-submit-btn" id="generatePlanBtn">
+                  <span>Generate Execution Plan</span>
+                  <kbd class="kbd-enter">→</kbd>
+                </button>
+              </div>
+
+            </form>
           </div>
-          <div class="form-section">
-            <label class="form-label" for="completionGoal">Completion Goal</label>
-            <p class="form-desc">What’s your primary objective?</p>
-            <select class="dropdown-select" id="completionGoal" name="completionGoal">
-              <option value="balanced" selected>Balanced (Recommended)</option>
-              <option value="fastest">Fastest (Tight schedule)</option>
-              <option value="comfortable">Comfortable (Extra buffer)</option>
-            </select>
-          </div>
-          <div class="setup-actions">
-            <button type="submit" class="btn btn-primary btn-lg" id="generatePlanBtn">Generate Plan
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            </button>
-          </div>
-        </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="site-footer__bottom">
+        <span>PlaylistPilot · © 2026 Production Pacing Configurator</span>
+        <span class="live-clock">
+          <span class="live-clock__dot"></span>
+          LIVE · IST <span id="live-ist-clock">--:--:--</span>
+        </span>
       </div>
-    </section>
-  </main>
-  <footer class="footer">
-    <div class="container footer-content">
-      <p>&copy; 2026 PlaylistPilot. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="#features">Features</a>
-        <a href="#about">About</a>
-        <a href="https://github.com/Nishank018/PlaylistPilot" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
+
+  <script type="module" src="src/js/theme.js"></script>
   <script type="module" src="src/js/mockData.js"></script>
   <script type="module" src="src/js/setup.js"></script>
 </body>

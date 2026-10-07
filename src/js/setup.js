@@ -1,18 +1,10 @@
-// Setup Page JavaScript – Fixed IDs and variable scope
-// --------------------------------------------------------------
-// This script powers the setup (customisation) page. It now references the
-// actual DOM IDs used in the HTML (camelCase) and shares module‑level variables
-// where needed.
-
-// ---------- Module‑level variables (shared) ----------
+// Setup Page JS - Ultra-Sleek 2026 Liquid Glass System
 let activePlaylistId = null;
 let form, hoursInput, hoursError, generateBtn;
 let emptyState, contentSection, playlistBadge;
-let mobileMenuBtn, mobileNavPanel;
+let minusBtn, plusBtn;
 
-/** Initialise the setup page once the DOM is ready. */
 function initSetupPage() {
-  // ---------- DOM ELEMENTS ----------
   form = document.getElementById('learningPreferencesForm');
   hoursInput = document.getElementById('hoursPerDay');
   hoursError = document.getElementById('hoursError');
@@ -22,69 +14,171 @@ function initSetupPage() {
   contentSection = document.getElementById('setupContent');
   playlistBadge = document.getElementById('playlistTag');
 
-  mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  mobileNavPanel = document.getElementById('mobile-nav-panel');
+  minusBtn = document.getElementById('hours-minus');
+  plusBtn = document.getElementById('hours-plus');
 
-  // ---------- MOBILE MENU TOGGLE ----------
-  if (mobileMenuBtn && mobileNavPanel) {
-    mobileMenuBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      mobileNavPanel.classList.toggle('open');
-      const isOpen = mobileNavPanel.classList.contains('open');
-      mobileMenuBtn.setAttribute('aria-expanded', isOpen);
-      mobileMenuBtn.style.transform = isOpen ? 'rotate(90deg)' : 'none';
-    });
+  initLiveClock();
+  initCustomCursorSpotlight();
+  initSetupGSAPMotion();
 
-    mobileNavPanel.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileNavPanel.classList.remove('open');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        mobileMenuBtn.style.transform = 'none';
-      });
-    });
-
-    document.addEventListener('click', (event) => {
-      if (!mobileNavPanel.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
-        mobileNavPanel.classList.remove('open');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        mobileMenuBtn.style.transform = 'none';
+  // Plus / Minus hours buttons with smooth micro-scale feedback
+  if (minusBtn && hoursInput) {
+    minusBtn.addEventListener('click', () => {
+      let val = parseFloat(hoursInput.value) || 2.0;
+      if (val > 0.5) {
+        hoursInput.value = (val - 0.5).toFixed(1);
+        triggerInputPulse();
+        validateHours();
       }
     });
   }
 
-  // ---------- ANIMATIONS (GSAP) ----------
-  if (typeof gsap !== 'undefined' && contentSection && contentSection.style.display !== 'none') {
-    gsap.from('#setupHeaderAnim', { opacity: 0, y: -20, duration: 0.6, ease: 'power3.out' });
-    gsap.from('#setupCardAnim', { opacity: 0, y: 30, duration: 0.8, delay: 0.1, ease: 'power4.out' });
+  if (plusBtn && hoursInput) {
+    plusBtn.addEventListener('click', () => {
+      let val = parseFloat(hoursInput.value) || 2.0;
+      if (val < 8.0) {
+        hoursInput.value = (val + 0.5).toFixed(1);
+        triggerInputPulse();
+        validateHours();
+      }
+    });
   }
 
-  // ---------- PLAYLIST LOOKUP ----------
+  // Playlist Lookup
   const selectedId = localStorage.getItem('selectedPlaylistId');
   if (!selectedId) {
-    // No playlist selected – show friendly empty state.
     if (contentSection) contentSection.style.display = 'none';
     if (emptyState) emptyState.style.display = 'block';
     return;
   }
 
   const playlist = loadPlaylistDetails(selectedId);
-  if (playlistBadge) {
+  if (playlistBadge && playlist.title) {
     playlistBadge.textContent = `Course: ${playlist.title}`;
-    playlistBadge.className = 'badge badge-primary';
   }
 
-  // ---------- VALIDATION ----------
+  // Restore previously calibrated preferences if available
+  const savedHours = localStorage.getItem('hoursPerDay');
+  if (savedHours && hoursInput) {
+    hoursInput.value = parseFloat(savedHours).toFixed(1);
+  }
+
+  const savedSpeed = localStorage.getItem('playbackSpeed');
+  if (savedSpeed && form) {
+    const radio = form.querySelector(`input[name="playbackSpeed"][value="${savedSpeed}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  const savedIntensity = localStorage.getItem('intensity');
+  if (savedIntensity && form) {
+    const radio = form.querySelector(`input[name="intensity"][value="${savedIntensity}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  const savedRevision = localStorage.getItem('revisionDays');
+  if (savedRevision !== null) {
+    const revCheck = document.getElementById('revisionDays');
+    if (revCheck) revCheck.checked = (savedRevision === 'true');
+  }
+
+  const savedGoal = localStorage.getItem('completionGoal');
+  if (savedGoal) {
+    const goalSelect = document.getElementById('completionGoal');
+    if (goalSelect) goalSelect.value = savedGoal;
+  }
+
   if (hoursInput) {
-    hoursInput.addEventListener('input', () => validateHours(hoursInput, hoursError, generateBtn));
+    hoursInput.addEventListener('input', validateHours);
   }
 
-  // ---------- FORM SUBMISSION ----------
   if (form) {
-    form.addEventListener('submit', (e) => handleFormSubmit(e));
+    form.addEventListener('submit', handleFormSubmit);
   }
 }
 
-/** Load playlist details from cache or mock data. */
+function triggerInputPulse() {
+  if (!hoursInput || typeof gsap === 'undefined') return;
+  gsap.fromTo(hoursInput, 
+    { scale: 1.2, color: 'var(--color-red-dot)' }, 
+    { scale: 1, color: '', duration: 0.35, ease: 'back.out(2)' }
+  );
+}
+
+function initSetupGSAPMotion() {
+  if (typeof gsap === 'undefined') return;
+  
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  tl.fromTo('.section-header', 
+    { opacity: 0, y: 30 }, 
+    { opacity: 1, y: 0, duration: 0.7 }
+  )
+  .fromTo('#setupCardAnim', 
+    { opacity: 0, y: 40, scale: 0.98 }, 
+    { opacity: 1, y: 0, scale: 1, duration: 0.8, clearProps: 'all' }, 
+    '-=0.4'
+  )
+  .fromTo('.form-section', 
+    { opacity: 0, y: 20 }, 
+    { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, clearProps: 'all' }, 
+    '-=0.4'
+  );
+}
+
+function initCustomCursorSpotlight() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  let dot = document.querySelector('.custom-cursor-dot');
+  let ring = document.querySelector('.custom-cursor-ring');
+
+  if (!dot) {
+    dot = document.createElement('div');
+    dot.className = 'custom-cursor-dot';
+    document.body.appendChild(dot);
+  }
+  if (!ring) {
+    ring = document.createElement('div');
+    ring.className = 'custom-cursor-ring';
+    document.body.appendChild(ring);
+  }
+
+  let mouseX = -100, mouseY = -100;
+  let ringX = -100, ringY = -100;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.opacity = '1';
+    ring.style.opacity = '1';
+    dot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+  });
+
+  function renderCursor() {
+    ringX += (mouseX - ringX) * 0.18;
+    ringY += (mouseY - ringY) * 0.18;
+    ring.style.transform = `translate3d(${ringX - 18}px, ${ringY - 18}px, 0)`;
+    requestAnimationFrame(renderCursor);
+  }
+  renderCursor();
+
+  document.querySelectorAll('a, button, input, select, label, .chip').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('cursor-hover'));
+  });
+}
+
+function initLiveClock() {
+  const clockEl = document.getElementById('live-ist-clock');
+  if (!clockEl) return;
+
+  function updateTime() {
+    const options = { timeZone: 'Asia/Kolkata', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    clockEl.textContent = new Date().toLocaleTimeString('en-US', options);
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+}
+
 function loadPlaylistDetails(id) {
   const cached = localStorage.getItem('activePlaylistDetails');
   if (cached) {
@@ -93,32 +187,30 @@ function loadPlaylistDetails(id) {
       if (parsed && parsed.id === id) return parsed;
     } catch (_) {}
   }
-  return window.PlaylistPilotData.playlists.find(p => p.id === id) || {};
+  return (window.PlaylistPilotData && window.PlaylistPilotData.playlists) 
+    ? window.PlaylistPilotData.playlists.find(p => p.id === id) || {}
+    : {};
 }
 
-/** Validate the "hours per day" field. */
-function validateHours(input, errorBox, submitBtn) {
-  const val = parseFloat(input.value);
+function validateHours() {
+  if (!hoursInput) return true;
+  const val = parseFloat(hoursInput.value);
   const isValid = !isNaN(val) && val >= 0.5 && val <= 8;
   if (!isValid) {
-    input.style.borderColor = 'var(--color-error)';
-    errorBox.style.display = 'flex';
-    submitBtn.classList.add('btn-disabled');
-    submitBtn.disabled = true;
+    hoursInput.style.borderColor = 'var(--color-error)';
+    if (hoursError) hoursError.style.display = 'flex';
+    if (generateBtn) generateBtn.disabled = true;
   } else {
-    input.style.borderColor = '';
-    errorBox.style.display = 'none';
-    submitBtn.classList.remove('btn-disabled');
-    submitBtn.disabled = false;
+    hoursInput.style.borderColor = '';
+    if (hoursError) hoursError.style.display = 'none';
+    if (generateBtn) generateBtn.disabled = false;
   }
   return isValid;
 }
 
-/** Handle form submission: persist preferences and navigate to the plan page. */
 function handleFormSubmit(event) {
   event.preventDefault();
-
-  if (!validateHours(hoursInput, hoursError, generateBtn)) return;
+  if (!validateHours()) return;
 
   const hoursPerDay = parseFloat(hoursInput.value);
   const speedRadio = form.querySelector('input[name="playbackSpeed"]:checked');
@@ -137,7 +229,6 @@ function handleFormSubmit(event) {
   window.location.href = 'plan.html';
 }
 
-// Initialise when DOM is ready.
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initSetupPage);
 } else {
