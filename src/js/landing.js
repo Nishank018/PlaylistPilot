@@ -150,13 +150,9 @@ function displayPlaylistPreview(playlist) {
   cardEstDays.textContent = `${playlist.estimatedDays} Days`;
   cardCategory.textContent = playlist.category || 'Course';
 
-  if (playlist.thumbnailUrl) {
-    playlistThumb.style.background = `url('${playlist.thumbnailUrl}') center/cover no-repeat`;
-    playlistThumb.textContent = '';
-  } else {
-    playlistThumb.style.background = playlist.thumbnailGradient || 'var(--color-accent)';
-    playlistThumb.textContent = playlist.title.split(' ').slice(0, 2).map(w => w[0]).join('');
-  }
+  const thumbUrl = playlist.thumbnailUrl || (playlist.id === 'uiux-course' ? 'https://i.ytimg.com/vi/c9Wg6Cb_YlU/hqdefault.jpg' : (playlist.id === 'python-algo' ? 'https://i.ytimg.com/vi/_uQrJ0TkZlc/hqdefault.jpg' : 'https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg'));
+  playlistThumb.innerHTML = `<img src="${thumbUrl}" alt="${playlist.title}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg'" />`;
+  playlistThumb.style.background = 'none';
 
   localStorage.setItem('activePlaylistDetails', JSON.stringify(playlist));
 

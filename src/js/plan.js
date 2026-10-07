@@ -186,6 +186,15 @@ const initPlanPage = () => {
   let completedVideoIds = new Set(JSON.parse(localStorage.getItem(completedStorageKey) || '[]'));
 
   // Header display
+  const planPlaylistThumb = document.getElementById('planPlaylistThumb');
+  const thumbUrl = playlist.thumbnailUrl || (playlist.id === 'uiux-course' ? 'https://i.ytimg.com/vi/c9Wg6Cb_YlU/hqdefault.jpg' : (playlist.id === 'python-algo' ? 'https://i.ytimg.com/vi/_uQrJ0TkZlc/hqdefault.jpg' : 'https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg'));
+  if (planPlaylistThumb) {
+    planPlaylistThumb.src = thumbUrl;
+    planPlaylistThumb.onerror = () => {
+      planPlaylistThumb.src = 'https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg';
+    };
+  }
+
   planPlaylistTitle.textContent = playlist.title;
   planPlaylistCreator.textContent = playlist.creator;
   speedBadge.textContent = `${playbackSpeed}x Playback`;

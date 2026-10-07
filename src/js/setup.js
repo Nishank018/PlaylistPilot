@@ -53,6 +53,24 @@ function initSetupPage() {
   }
 
   const playlist = loadPlaylistDetails(selectedId);
+  const setupPlaylistThumb = document.getElementById('setupPlaylistThumb');
+  const setupCourseTitle = document.getElementById('setupCourseTitle');
+  const setupCourseMeta = document.getElementById('setupCourseMeta');
+
+  const thumbUrl = playlist.thumbnailUrl || (playlist.id === 'uiux-course' ? 'https://i.ytimg.com/vi/c9Wg6Cb_YlU/hqdefault.jpg' : (playlist.id === 'python-algo' ? 'https://i.ytimg.com/vi/_uQrJ0TkZlc/hqdefault.jpg' : 'https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg'));
+
+  if (setupPlaylistThumb) {
+    setupPlaylistThumb.src = thumbUrl;
+    setupPlaylistThumb.onerror = () => {
+      setupPlaylistThumb.src = 'https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg';
+    };
+  }
+  if (setupCourseTitle && playlist.title) {
+    setupCourseTitle.textContent = playlist.title;
+  }
+  if (setupCourseMeta) {
+    setupCourseMeta.textContent = `by ${playlist.creator || 'Code Academy'} · ${playlist.videoCount || 0} Videos · ${playlist.durationHours || 24}h Total`;
+  }
   if (playlistBadge && playlist.title) {
     playlistBadge.textContent = `Course: ${playlist.title}`;
   }

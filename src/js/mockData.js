@@ -24,6 +24,7 @@ window.PlaylistPilotData = {
       durationHours: 48,
       estimatedDays: 24,
       category: 'Development',
+      thumbnailUrl: 'https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg',
       thumbnailGradient: 'linear-gradient(135deg, #F7DF1E 0%, #F07E15 100%)',
       // Generating 120 videos programmatically to keep codebase clean but highly realistic
       videos: (function() {
@@ -119,6 +120,7 @@ window.PlaylistPilotData = {
       durationHours: 18,
       estimatedDays: 9,
       category: 'Design',
+      thumbnailUrl: 'https://i.ytimg.com/vi/c9Wg6Cb_YlU/hqdefault.jpg',
       thumbnailGradient: 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)',
       videos: (function() {
         const topics = [
@@ -185,6 +187,7 @@ window.PlaylistPilotData = {
       durationHours: 32,
       estimatedDays: 16,
       category: 'Computer Science',
+      thumbnailUrl: 'https://i.ytimg.com/vi/_uQrJ0TkZlc/hqdefault.jpg',
       thumbnailGradient: 'linear-gradient(135deg, #306998 0%, #FFD43B 100%)',
       videos: (function() {
         const topics = [
